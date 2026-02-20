@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HTML + CSS Demo</title>
+  <style>
+   /* Sayfa reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Header - Üst Menü */
+.topbar {
+  position: fixed;        /* En üste sabitle */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: #000; /* Siyah arka plan */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 1000;
+}
+
+/* Logo */
+.brand {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Menü */
+.topnav {
+  display: flex;
+  gap: 15px;
+}
+
+/* Menü linkleri kutu şeklinde */
+.topnav__link {
+  text-decoration: none;
+  color: white;
+  padding: 10px 18px;
+  border: 1px solid white;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+/* Hover efekti */
+.topnav__link:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Aktif link */
+.topnav__link.is-active {
+  background-color: white;
+  color: black;
+}
+
+/* Kullanıcı alanı */
+.user__pill {
+  background-color: white;
+  color: black;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+/* İçerik header'ın altında kalmasın diye boşluk */
+body {
+  padding-top: 80px;
+  font-family: Arial, sans-serif;
+} 
+
+/* Layout yapısı */
+.layout {
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  background-color: #111;
+  color: white;
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Başlık */
+.sidebar__title {
+  font-size: 20px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+}
+
+/* Menü linkleri */
+.sidebar__link {
+  text-decoration: none;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.sidebar__link:hover {
+  background-color: #333;
+}
+
+.sidebar__link.is-active {
+  background-color: white;
+  color: black;
+  font-weight: bold;
+}
+
+/* İPUCU KARTI */
+.sidebar__card {
+  margin-top: auto;              /* En alta iter */
+  background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #444;
+  box-shadow: 0 0 15px rgba(255,255,255,0.05);
+}
+
+.sidebar__cardTitle {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.sidebar__cardText {
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+/* ===== MAIN CONTENT ===== */
+
+.content {
+  flex: 1;
+  padding: 40px;
+}
+
+/* Kart */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+/* Başlık */
+.card__title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+/* Açıklama metni */
+.card__text {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #444;
+}
+
+/* Badge container */
+.badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Küçük kutucuklar */
+.badge {
+  background-color: #000;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+/* Hover efekti */
+.badge:hover {
+  background-color: #444;
+}
+
+/* ===== TABLO ALANI ===== */
+
+.tableWrap {
+  overflow-x: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+/* Ana tablo */
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+/* Üst başlık satırı */
+.dataTable thead {
+  background-color: #222;   /* Hafif koyu */
+  color: white;
+}
+
+.dataTable th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* Hücreler */
+.dataTable td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Numara sütunu dar */
+.dataTable td:first-child,
+.dataTable th:first-child {
+  width: 50px;
+  text-align: center;
+}
+
+/* Öğrenci isimleri sola hizalı */
+.dataTable td:nth-child(2) {
+  font-weight: 500;
+}
+
+/* Satır hover */
+.dataTable tbody tr:hover {
+  background-color: #f5f5f5;
+  transition: 0.2s;
+}
+
+/* Son satır border kaldır */
+.dataTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Alt not */
+.muted {
+  font-size: 14px;
+  color: #777;
+  margin-top: 10px;
+}
+
+/* ===== FOOTER ===== */
+
+.footer {
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 40px;
+  font-size: 14px;
+
+  background-color: #111;
+  color: #ccc;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Ayraç */
+.footer__sep {
+  color: #555;
+}
+
+/* Linkler */
+.footer__link {
+  text-decoration: none;
+  color: #ccc;
+  transition: 0.3s;
+}
+
+.footer__link:hover {
+  color: white;
+}
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- TOP NAV -->
+  <header class="topbar">
+    <div class="brand">CENG Web Demo</div>
+
+    <nav class="topnav" aria-label="Üst Menü">
+      <a class="topnav__link is-active" href="#">Anasayfa</a>
+      <a class="topnav__link" href="#">Duyurular</a>
+      <a class="topnav__link" href="#">Notlar</a>
+      <a class="topnav__link" href="#">İletişim</a>
+    </nav>
+
+    <div class="user">
+      <span class="user__pill">Can</span>
+    </div>
+  </header>
+
+  <!-- PAGE LAYOUT -->
+  <div class="layout">
+    <!-- SIDE MENU -->
+    <aside class="sidebar" aria-label="Yan Menü">
+      <h2 class="sidebar__title">Menü</h2>
+      <a class="sidebar__link is-active" href="#">Dashboard</a>
+      <a class="sidebar__link" href="#">Ödevler</a>
+      <a class="sidebar__link" href="#">Kaynaklar</a>
+      <a class="sidebar__link" href="#">Ders Planı</a>
+      <a class="sidebar__link" href="#">Ayarlar</a>
+
+      <div class="sidebar__card">
+        <h3 class="sidebar__cardTitle">İpucu</h3>
+        <p class="sidebar__cardText">
+          Bu sayfa: header + aside + main düzenini gösterir.
+        </p>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="content">
+      <section class="card">
+        <h1 class="card__title">1. Hafta: HTML & CSS Sayfa İskeleti</h1>
+        <p class="card__text">
+          Bu örnekte <strong>üst menü</strong>, <strong>yan menü</strong> ve ortada
+          <strong>3x5 tablo</strong> bulunuyor. Öğrenciler için sınıfta “kutu modeli, padding,
+          margin, border, hover, active” gibi konuları göstermek için ideal.
+        </p>
+
+        <div class="badges">
+          <span class="badge">HTML Semantik</span>
+          <span class="badge">Flexbox</span>
+          <span class="badge">Tablo</span>
+          <span class="badge">Hover</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card__subtitle">Örnek Veri Tablosu (3 x 5)</h2>
+
+        <div class="tableWrap">
+          <table class="dataTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Öğrenci</th>
+                <th>Vize</th>
+                <th>Final</th>
+                <th>Harf</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>1</td><td>Ayşe Kaya</td><td>78</td><td>85</td><td>BA</td>
+              </tr>
+              <tr>
+                <td>2</td><td>Mehmet Demir</td><td>65</td><td>72</td><td>CB</td>
+              </tr>
+              <tr>
+                <td>3</td><td>Elif Yılmaz</td><td>90</td><td>93</td><td>AA</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="muted">
+          Not: Bu tablo 3 satır (öğrenci) ve 5 sütun içerir.
+        </p>
+      </section>
+
+      <footer class="footer">
+        <span>© 2026 - Web Programming</span>
+        <span class="footer__sep">•</span>
+        <a class="footer__link" href="#">Gizlilik</a>
+        <a class="footer__link" href="#">Yardım</a>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
