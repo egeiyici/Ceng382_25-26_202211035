@@ -22,7 +22,7 @@
   background-color: #000; /* Siyah arka plan */
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 0 40px;
   z-index: 1000;
 }
@@ -62,6 +62,9 @@
   color: black;
 }
 
+.user {
+  margin-left: auto;
+}
 /* Kullanıcı alanı */
 .user__pill {
   background-color: white;
@@ -69,11 +72,14 @@
   padding: 8px 15px;
   border-radius: 20px;
   font-weight: bold;
+  
 }
+
 
 /* İçerik header'ın altında kalmasın diye boşluk */
 body {
-  padding-top: 80px;
+  margin: 0;
+  padding-top: 70px;
   font-family: Arial, sans-serif;
 } 
 
