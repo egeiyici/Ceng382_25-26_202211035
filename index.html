@@ -307,6 +307,78 @@ body {
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
+
+.card {
+  position: relative;
+  padding-bottom: 70px; /* buton altta yer kaplasın */
+}
+
+.card__btn {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  background-color: #1e90ff;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.card__btn:hover {
+  background-color: #0d6efd;
+}
+
+.card.active-style #badges {
+  display: none;
+}
+
+.tableActions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center; /* Ortalar */
+}
+
+.btnSort {
+  background-color: #28a745;  /* Yeşil */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btnSort:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.imageCard {
+  text-align: center; /* içindekileri ortalar */
+}
+
+.imageBtn {
+  margin-top: 15px;
+  background-color: #FFD400;
+  color: #111;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.imageBtn:hover {
+  filter: brightness(0.95);
+}
+
+.imageBtn:active {
+  transform: scale(0.97);
+}
   </style>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -350,26 +422,29 @@ body {
     <!-- MAIN CONTENT -->
     <main class="content">
       <section class="card">
-        <h1 class="card__title">1. Hafta: HTML & CSS Sayfa İskeleti</h1>
-        <p class="card__text">
+        <h1 class="card__title" id="cardTitle">1. Hafta: HTML & CSS Sayfa İskeleti</h1>
+        <p class="card__text" id="mainText">
           Bu örnekte <strong>üst menü</strong>, <strong>yan menü</strong> ve ortada
           <strong>3x5 tablo</strong> bulunuyor. Öğrenciler için sınıfta “kutu modeli, padding,
           margin, border, hover, active” gibi konuları göstermek için ideal.
         </p>
 
-        <div class="badges">
+        <div class="badges" id="badges">
           <span class="badge">HTML Semantik</span>
           <span class="badge">Flexbox</span>
           <span class="badge">Tablo</span>
           <span class="badge">Hover</span>
         </div>
+        <button class="card__btn" id="styleBtn">
+           Değiştir
+        </button>
       </section>
 
       <section class="card">
         <h2 class="card__subtitle">Örnek Veri Tablosu (3 x 5)</h2>
 
         <div class="tableWrap">
-          <table class="dataTable">
+          <table class="dataTable" id="studentTable">
             <thead>
               <tr>
                 <th>#</th>
@@ -394,17 +469,26 @@ body {
           </table>
         </div>
 
+        <div class="tableActions">
+          <button id="sortFinalBtn" class="btnSort">
+            Final Notlarını Büyükten Küçüğe Sırala
+          </button>
+        </div> 
         <p class="muted">
           Not: Bu tablo 3 satır (öğrenci) ve 5 sütun içerir.
         </p>
       </section>
 
       <section class="card imageCard">
-        
-      
+  
         <div class="imageBox">
-          <img src="images/image_1.jpg" alt="Tablo ile ilgili görsel">
+          <img id="mainImage" src="images/image_1.jpg" alt="Tablo ile ilgili görsel">
         </div>
+      
+        <button id="changeBtn" class="imageBtn">
+          Resmi Değiştir
+        </button>
+      
       </section>
 
       <footer class="footer">
@@ -415,5 +499,6 @@ body {
       </footer>
     </main>
   </div>
+<script src="javascript.js"></script>
 </body>
 </html>
