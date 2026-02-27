@@ -1,3 +1,20 @@
  [1] OpenAI, "Adding css commands to html code " ChatGPT shared conversation.
  [Online]. Available: https://chatgpt.com/share/69982a0e-7944-8013-9018-1033e5bbdf6d
  Accessed: Feb. 20, 2026.
+
+[2] OpenAI, "bug fixes" ChatGPT shared conversation.
+ [Online]. Available: https://chatgpt.com/g/g-p-6998221ef5388191a6528a8752afe068/c/69a16936-4ccc-8384-9069-cecb2633f9fe
+ Accessed: Feb. 27, 2026.
+
+[3] OpenAI, "resim butonu" ChatGPT shared conversation.
+ [Online]. Available: https://chatgpt.com/g/g-p-6998221ef5388191a6528a8752afe068/c/69a166c9-15ac-838b-88f3-c5328b5c89f9
+ Accessed: Feb. 27, 2026.
+
+ [4] OpenAI, "sortlama butonu" ChatGPT shared conversation.
+ [Online]. Available: https://chatgpt.com/g/g-p-6998221ef5388191a6528a8752afe068/c/69a164d4-6934-8392-b5a7-0a6b56a6205e
+ Accessed: Feb. 27, 2026.
+
+ [4] OpenAI, "yazı değiştirme butonu" ChatGPT shared conversation.
+ [Online]. Available: https://chatgpt.com/g/g-p-6998221ef5388191a6528a8752afe068/c/69a15f33-2438-8393-9ab0-c584baaaebb7
+ Accessed: Feb. 27, 2026.
+
