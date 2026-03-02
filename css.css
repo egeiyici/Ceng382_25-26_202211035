@@ -609,3 +609,177 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+
+.underwaterGame{
+  position: relative;
+  height: 70vh;
+  min-height: 520px;
+  border-radius: 18px;
+  overflow: hidden;
+
+  /* Sen underwater.jpg koyacaksın */
+  background: url("images/underwater.jpg") center/cover no-repeat;
+
+  /* Neon ambience */
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.7),
+    0 0 0 1px rgba(0,255,200,.20) inset;
+}
+
+.underwaterGame::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(900px 500px at 50% 10%, rgba(0,255,200,.12), transparent 60%),
+    radial-gradient(700px 450px at 80% 70%, rgba(160,0,255,.10), transparent 55%),
+    linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55));
+  pointer-events:none;
+}
+
+/* HUD */
+.hud{
+  position:absolute;
+  top:14px; left:14px; right:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index: 5;
+  color: rgba(230,255,252,.9);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.tag{
+  display:inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(0,255,200,.12);
+  border: 1px solid rgba(0,255,200,.22);
+  color:#c7fff4;
+  font-weight: 700;
+  letter-spacing: .6px;
+  margin-right: 10px;
+}
+
+.info{
+  opacity:.85;
+  font-size: 14px;
+}
+
+.stat{
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+/* Oyun alanı */
+.playfield{
+  position:absolute;
+  inset:0;
+  z-index: 2;
+  cursor: none; /* gerçek imleci gizle */
+}
+
+/* Olta imleci */
+.rodCursor{
+  position:absolute;
+  z-index: 10;
+  width: 120px;     /* olta görseline göre ayarlarsın */
+  height: auto;
+  pointer-events:none;
+  transform: translate(-12px, -12px); /* mouse ile hizalama (şimdilik) */
+  filter:
+    drop-shadow(0 0 10px rgba(0,255,200,.35))
+    drop-shadow(0 0 18px rgba(160,0,255,.20));
+}
+
+/* Fail overlay */
+.failOverlay{
+  position:absolute;
+  inset:0;
+  display:none;
+  place-items:center;
+  z-index: 20;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(4px);
+}
+
+.failOverlay.isOpen{ display:grid; }
+
+.failBox{
+  width: min(420px, 92vw);
+  border-radius: 18px;
+  padding: 20px 18px;
+  background: rgba(10,12,18,.75);
+  border: 1px solid rgba(0,255,200,.25);
+  box-shadow: 0 30px 80px rgba(0,0,0,.65);
+  text-align:center;
+}
+
+.failTitle{
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #eafffb;
+  text-shadow: 0 0 18px rgba(0,255,200,.35);
+}
+
+.failText{
+  margin-top: 8px;
+  color: rgba(234,255,251,.75);
+}
+
+.failBtn{
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,255,200,.30);
+  background: rgba(0,255,200,.14);
+  color: #eafffb;
+  font-weight: 700;
+  cursor: pointer;
+}
+.failBtn:hover{
+  background: rgba(0,255,200,.22);
+}
+
+.hud__right{
+  display:flex;
+  gap:10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.startHint{
+  position:absolute;
+  inset:auto 14px 14px auto;
+  z-index: 6;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(234,255,251,.8);
+  font-size: 13px;
+  user-select:none;
+  pointer-events:none;
+}
+
+.startHint b{
+  color:#eafffb;
+  text-shadow: 0 0 16px rgba(0,255,200,.25);
+}
+
+.fish{
+  position: absolute;
+  width: 48px;              /* <<< küçüldü */
+  max-width: 7vw;           /* responsive */
+  height: auto;
+  pointer-events: none;
+  z-index: 3;
+  filter:
+    drop-shadow(0 0 10px rgba(0,255,200,.18))
+    drop-shadow(0 0 18px rgba(160,0,255,.12));
+  will-change: transform, left, top;
+}

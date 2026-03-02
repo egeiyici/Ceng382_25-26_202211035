@@ -102,12 +102,12 @@
         <p class="muted">
           Not: Bu tablo 3 satır (öğrenci) ve 5 sütun içerir.
         </p>
-        
+
        </section>
       
       <section class="card codeSection">
 
-  <h2 class="card__subtitle">JavaScript String + NaN Manipülasyonu</h2>
+  <h2 class="card__subtitle">JavaScript String + NaN Manipulation</h2>
 
   <div class="codeRow">
 
@@ -163,6 +163,37 @@ Type: string
   </div>
 
 </section>
+
+<section class="underwaterGame" id="underwaterGame">
+  <!-- Neon HUD -->
+  <div class="hud">
+    <div class="hud__left">
+      <span class="tag">NEON DIVE</span>
+      <span class="info">Don’t touch the fish</span>
+    </div>
+   <div class="hud__right">
+  <span class="stat">Time: <b id="time">00:00.0</b></span>
+  <span class="stat">Best: <b id="best">00:00.0</b></span>
+</div>
+  </div>
+
+  <!-- Oyun alanı -->
+  <div class="playfield" id="playfield"></div>
+
+  <!-- Try again overlay -->
+  <div class="failOverlay" id="failOverlay" aria-hidden="true">
+    <div class="failBox">
+      <div class="failTitle">TRY AGAIN</div>
+      <div class="failText">You touched a fish.</div>
+      <div class="failText" id="failStats">You lasted: 00:00.0</div>
+      <button class="failBtn" id="retryBtn">Restart</button>
+    </div>
+  </div>
+
+  <!-- Custom cursor: olta -->
+  <img class="rodCursor" id="rodCursor" src="images/rod.png" alt="" />
+</section>
+
 
       <section class="card imageCard">
   
