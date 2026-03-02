@@ -102,7 +102,67 @@
         <p class="muted">
           Not: Bu tablo 3 satır (öğrenci) ve 5 sütun içerir.
         </p>
-      </section>
+        
+       </section>
+      
+      <section class="card codeSection">
+
+  <h2 class="card__subtitle">JavaScript String + NaN Manipülasyonu</h2>
+
+  <div class="codeRow">
+
+    <!-- SOL: Kod Bloğu -->
+    <pre class="codeBlock"><code>
+let weird = "b" + "a" + +"x" + "a";
+
+console.log("weird:", weird);
+
+let banana = weird.replace("NaN", "NaNa");
+
+console.log("banana:", banana);
+console.log("Type:", typeof banana);
+    </code></pre>
+
+    <!-- SAĞ: Output -->
+    <div class="outputBox">
+      <pre>
+weird: baNaNa
+banana: baNaNaa
+Type: string
+      </pre>
+    </div>
+
+  </div>
+
+  <!-- ALT: Açıklama -->
+  <div class="explanationBox">
+    <p>
+      The expression <strong>+"x"</strong> attempts to convert the string "x" into a number.
+      Since "x" is not a numeric value, JavaScript returns <strong>NaN</strong> (Not a Number).
+    </p>
+
+    <p>
+      The concatenation works step-by-step:
+      <br>
+      "b" + "a" → "ba"<br>
+      "ba" + NaN → "baNaN"<br>
+      "baNaN" + "a" → "baNaNa"
+    </p>
+
+    <p>
+      The <code>replace("NaN", "NaNa")</code> method replaces the first occurrence of "NaN"
+      inside the string. Therefore:
+      <br>
+      "baNaNa" → "baNaNaa"
+    </p>
+
+    <p>
+      The final value remains a <strong>string</strong>, which is confirmed by
+      <code>typeof banana</code>.
+    </p>
+  </div>
+
+</section>
 
       <section class="card imageCard">
   

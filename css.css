@@ -380,3 +380,232 @@ body {
   transform: scale(0.97);
 }
   
+/* =========================
+   CODE SECTION (Neon)
+   ========================= */
+
+.codeSection .codeRow{
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 12px;
+}
+
+/* Kod bloğu */
+.codeSection .codeBlock{
+  margin: 0;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #0b0f1a;               /* koyu zemin */
+  border: 1px solid rgba(0,255,255,0.22);
+  box-shadow:
+    0 0 0 1px rgba(0,255,255,0.08),
+    0 0 18px rgba(0,255,255,0.16);
+  overflow: auto;
+}
+
+.codeSection .codeBlock code{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #d7e7ff;
+  white-space: pre;
+}
+
+/* Output kutusu (Neon console) */
+.codeSection .outputBox{
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: radial-gradient(circle at 20% 10%, rgba(0,255,168,0.18), transparent 55%),
+              radial-gradient(circle at 80% 0%, rgba(255,0,200,0.14), transparent 55%),
+              #060913;
+  border: 1px solid rgba(0,255,168,0.26);
+  box-shadow:
+    0 0 0 1px rgba(0,255,168,0.10),
+    0 0 22px rgba(0,255,168,0.18);
+}
+
+.codeSection .outputBox pre{
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #b9ffe7;
+}
+
+/* Output başlığı gibi küçük bir "console" hissi */
+.codeSection .outputBox::before{
+  content: "Console Output";
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: rgba(185,255,231,0.85);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px dashed rgba(0,255,168,0.26);
+}
+
+/* Açıklama kutusu */
+.codeSection .explanationBox{
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #0a0e18;
+  border: 1px solid rgba(255,255,255,0.10);
+  color: #dbe7ff;
+}
+
+.codeSection .explanationBox p{
+  margin: 10px 0;
+}
+
+/* Önemli yerleri neon vurgulama */
+.codeSection .explanationBox strong{
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0,255,255,0.35);
+}
+
+.codeSection .explanationBox code{
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(0,255,255,0.10);
+  border: 1px solid rgba(0,255,255,0.20);
+  color: #c9fbff;
+}
+
+/* Hover ile “parlama” */
+.codeSection .codeBlock:hover{
+  box-shadow:
+    0 0 0 1px rgba(0,255,255,0.14),
+    0 0 26px rgba(0,255,255,0.22);
+}
+
+.codeSection .outputBox:hover{
+  box-shadow:
+    0 0 0 1px rgba(0,255,168,0.16),
+    0 0 30px rgba(0,255,168,0.24);
+}
+
+/* Responsive: dar ekranda alt alta */
+@media (max-width: 900px){
+  .codeSection .codeRow{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   CODE SECTION (Neon)
+   ========================= */
+
+.codeSection .codeRow{
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 12px;
+}
+
+/* Kod bloğu */
+.codeSection .codeBlock{
+  margin: 0;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #0b0f1a;               /* koyu zemin */
+  border: 1px solid rgba(0,255,255,0.22);
+  box-shadow:
+    0 0 0 1px rgba(0,255,255,0.08),
+    0 0 18px rgba(0,255,255,0.16);
+  overflow: auto;
+}
+
+.codeSection .codeBlock code{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #d7e7ff;
+  white-space: pre;
+}
+
+/* Output kutusu (Neon console) */
+.codeSection .outputBox{
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: radial-gradient(circle at 20% 10%, rgba(0,255,168,0.18), transparent 55%),
+              radial-gradient(circle at 80% 0%, rgba(255,0,200,0.14), transparent 55%),
+              #060913;
+  border: 1px solid rgba(0,255,168,0.26);
+  box-shadow:
+    0 0 0 1px rgba(0,255,168,0.10),
+    0 0 22px rgba(0,255,168,0.18);
+}
+
+.codeSection .outputBox pre{
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #b9ffe7;
+}
+
+/* Output başlığı gibi küçük bir "console" hissi */
+.codeSection .outputBox::before{
+  content: "Console Output";
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: rgba(185,255,231,0.85);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px dashed rgba(0,255,168,0.26);
+}
+
+/* Açıklama kutusu */
+.codeSection .explanationBox{
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #0a0e18;
+  border: 1px solid rgba(255,255,255,0.10);
+  color: #dbe7ff;
+}
+
+.codeSection .explanationBox p{
+  margin: 10px 0;
+}
+
+/* Önemli yerleri neon vurgulama */
+.codeSection .explanationBox strong{
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0,255,255,0.35);
+}
+
+.codeSection .explanationBox code{
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(0,255,255,0.10);
+  border: 1px solid rgba(0,255,255,0.20);
+  color: #c9fbff;
+}
+
+/* Hover ile “parlama” */
+.codeSection .codeBlock:hover{
+  box-shadow:
+    0 0 0 1px rgba(0,255,255,0.14),
+    0 0 26px rgba(0,255,255,0.22);
+}
+
+.codeSection .outputBox:hover{
+  box-shadow:
+    0 0 0 1px rgba(0,255,168,0.16),
+    0 0 30px rgba(0,255,168,0.24);
+}
+
+/* Responsive: dar ekranda alt alta */
+@media (max-width: 900px){
+  .codeSection .codeRow{
+    grid-template-columns: 1fr;
+  }
+}
