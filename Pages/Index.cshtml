@@ -49,11 +49,9 @@
 
 <script>
     function calculateGrades() {
-
         const rows = document.querySelectorAll("tbody tr");
 
         rows.forEach(row => {
-
             const midterm = parseFloat(row.querySelector(".midterm").innerText);
             const final = parseFloat(row.querySelector(".final").innerText);
 
@@ -75,3 +73,206 @@
         });
     }
 </script>
+
+<section class="pageSection">
+  <div class="pageShell">
+
+    <!-- TOP NAV -->
+    <header class="topbar">
+      <div class="brand">CENG Web Demo</div>
+
+      <nav class="topnav" aria-label="Üst Menü">
+        <a class="topnav__link is-active" href="#">Anasayfa</a>
+        <a class="topnav__link" href="#">Duyurular</a>
+        <a class="topnav__link" href="#">Notlar</a>
+        <a class="topnav__link" href="#">İletişim</a>
+      </nav>
+
+      <div class="user">
+        <span class="user__pill">Can</span>
+      </div>
+    </header>
+
+    <!-- PAGE LAYOUT -->
+    <div class="layout">
+      <!-- SIDE MENU -->
+      <aside class="sidebar" aria-label="Yan Menü">
+        <h2 class="sidebar__title">Menü</h2>
+        <a class="sidebar__link is-active" href="#">Dashboard</a>
+        <a class="sidebar__link" href="#">Ödevler</a>
+        <a class="sidebar__link" href="#">Kaynaklar</a>
+        <a class="sidebar__link" href="#">Ders Planı</a>
+        <a class="sidebar__link" href="#">Ayarlar</a>
+
+        <div class="sidebar__card">
+          <h3 class="sidebar__cardTitle">İpucu</h3>
+          <p class="sidebar__cardText">
+            Bu sayfa: header + aside + main düzenini gösterir.
+          </p>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="content">
+        <section class="card" id="mainCard">
+          <h1 class="card__title" id="cardTitle">1. Hafta: HTML & CSS Sayfa İskeleti</h1>
+          <p class="card__text" id="mainText">
+            Bu örnekte <strong>üst menü</strong>, <strong>yan menü</strong> ve ortada
+            <strong>3x5 tablo</strong> bulunuyor. Öğrenciler için sınıfta “kutu modeli, padding,
+            margin, border, hover, active” gibi konuları göstermek için ideal.
+          </p>
+
+          <div class="badges" id="badges">
+            <span class="badge">HTML Semantik</span>
+            <span class="badge">Flexbox</span>
+            <span class="badge">Tablo</span>
+            <span class="badge">Hover</span>
+          </div>
+
+          <button class="card__btn" id="styleBtn">
+             Değiştir
+          </button>
+        </section>
+
+        <section class="card">
+          <h2 class="card__subtitle">Örnek Veri Tablosu (3 x 5)</h2>
+
+          <div class="tableWrap">
+            <table class="dataTable" id="studentTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Öğrenci</th>
+                  <th>Vize</th>
+                  <th>Final</th>
+                  <th>Harf</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>1</td><td>Ayşe Kaya</td><td>78</td><td>85</td><td>BA</td>
+                </tr>
+                <tr>
+                  <td>2</td><td>Mehmet Demir</td><td>65</td><td>72</td><td>CB</td>
+                </tr>
+                <tr>
+                  <td>3</td><td>Elif Yılmaz</td><td>90</td><td>93</td><td>AA</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tableActions">
+            <button id="sortFinalBtn" class="btnSort">
+              Final Notlarını Büyükten Küçüğe Sırala
+            </button>
+          </div>
+
+          <p class="muted">
+            Not: Bu tablo 3 satır (öğrenci) ve 5 sütun içerir.
+          </p>
+        </section>
+
+        <section class="card codeSection">
+          <h2 class="card__subtitle">JavaScript String + NaN Manipulation</h2>
+
+          <div class="codeRow">
+            <pre class="codeBlock"><code>
+let weird = "b" + "a" + +"x" + "a";
+
+console.log("weird:", weird);
+
+let banana = weird.replace("NaN", "NaNa");
+
+console.log("banana:", banana);
+console.log("Type:", typeof banana);
+            </code></pre>
+
+            <div class="outputBox">
+              <pre>
+weird: baNaNa
+banana: baNaNaa
+Type: string
+              </pre>
+            </div>
+          </div>
+
+          <div class="explanationBox">
+            <p>
+              The expression <strong>+"x"</strong> attempts to convert the string "x" into a number.
+              Since "x" is not a numeric value, JavaScript returns <strong>NaN</strong> (Not a Number).
+            </p>
+
+            <p>
+              The concatenation works step-by-step:
+              <br>
+              "b" + "a" → "ba"<br>
+              "ba" + NaN → "baNaN"<br>
+              "baNaN" + "a" → "baNaNa"
+            </p>
+
+            <p>
+              The <code>replace("NaN", "NaNa")</code> method replaces the first occurrence of "NaN"
+              inside the string. Therefore:
+              <br>
+              "baNaNa" → "baNaNaa"
+            </p>
+
+            <p>
+              The final value remains a <strong>string</strong>, which is confirmed by
+              <code>typeof banana</code>.
+            </p>
+          </div>
+        </section>
+
+        <section class="card underwaterGame" id="underwaterGame">
+          <div class="hud">
+            <div class="hud__left">
+              <span class="tag">NEON DIVE</span>
+              <span class="info">Don’t touch the fish</span>
+            </div>
+
+            <div class="hud__right">
+              <span class="stat">Time: <b id="time">00:00.0</b></span>
+              <span class="stat">Best: <b id="best">00:00.0</b></span>
+            </div>
+          </div>
+
+          <div class="playfield" id="playfield"></div>
+
+          <div class="failOverlay" id="failOverlay" aria-hidden="true">
+            <div class="failBox">
+              <div class="failTitle">TRY AGAIN</div>
+              <div class="failText">You touched a fish.</div>
+              <div class="failText" id="failStats">You lasted: 00:00.0</div>
+              <button class="failBtn" id="retryBtn">Restart</button>
+            </div>
+          </div>
+
+          <img class="rodCursor" id="rodCursor" src="/images/rod.png" alt="" />
+        </section>
+
+        <section class="card imageCard">
+          <div class="imageBox">
+            <img id="mainImage" src="/images/image_1.jpg" alt="Tablo ile ilgili görsel">
+          </div>
+
+          <button id="changeBtn" class="imageBtn">
+            Resmi Değiştir
+          </button>
+        </section>
+
+        <footer class="footer">
+          <span>© 2026 - Web Programming</span>
+          <span class="footer__sep">•</span>
+          <a class="footer__link" href="#">Gizlilik</a>
+          <a class="footer__link" href="#">Yardım</a>
+        </footer>
+      </main>
+    </div>
+  </div>
+</section>
+
+<script src="~/js/javascript.js"></script>
+<link rel="stylesheet" href="~/css/css.css">

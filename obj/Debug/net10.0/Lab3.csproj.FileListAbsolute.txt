@@ -562,3 +562,5 @@
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/Lab3.pdb
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/Lab3.genruntimeconfig.cache
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/ref/Lab3.dll
+/Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/kl6zxf83t0-{0}-bb3y0q886y-bb3y0q886y.gz
+/Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/km5zcdz1c5-{0}-jelxgu2sw7-jelxgu2sw7.gz
