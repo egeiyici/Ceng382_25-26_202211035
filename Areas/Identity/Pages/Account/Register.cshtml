@@ -1,0 +1,72 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="register-page">
+    <div class="register-card">
+        <h1 class="register-title">Register</h1>
+        <p class="register-subtitle">Create your account and complete your profile</p>
+
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="register-grid">
+                <div class="form-group">
+                    <label asp-for="Input.Name"></label>
+                    <input asp-for="Input.Name" class="form-control custom-input" placeholder="Name" />
+                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Surname"></label>
+                    <input asp-for="Input.Surname" class="form-control custom-input" placeholder="Surname" />
+                    <span asp-validation-for="Input.Surname" class="text-danger"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label asp-for="Input.Address"></label>
+                    <input asp-for="Input.Address" class="form-control custom-input" placeholder="Address" />
+                    <span asp-validation-for="Input.Address" class="text-danger"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label asp-for="Input.ProfilePhoto">Profile Photo</label>
+                    <div class="upload-box">
+                        <p class="upload-title">Choose a profile photo</p>
+                        <p class="upload-subtitle">Upload a clear image for your account</p>
+                        <input asp-for="Input.ProfilePhoto" type="file" class="form-control custom-input file-input" />
+                    </div>
+                    <span asp-validation-for="Input.ProfilePhoto" class="text-danger"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="form-control custom-input" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control custom-input" autocomplete="new-password" aria-required="true" placeholder="Password" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.ConfirmPassword"></label>
+                    <input asp-for="Input.ConfirmPassword" class="form-control custom-input" autocomplete="new-password" aria-required="true" placeholder="Confirm Password" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="full-width">
+                    <button id="registerSubmit" type="submit" class="register-btn">Register</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

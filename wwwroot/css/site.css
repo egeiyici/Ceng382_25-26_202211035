@@ -29,3 +29,127 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.register-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f2faf5;
+    padding: 40px 16px;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 620px;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 10px 25px rgba(0, 100, 0, 0.1);
+    padding: 36px;
+}
+
+.register-title {
+    text-align: center;
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #4a3731;
+}
+
+.register-subtitle {
+    text-align: center;
+    color: #8c8c8c;
+    margin-bottom: 28px;
+    font-size: 14px;
+}
+
+.register-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #444;
+}
+
+.custom-input {
+    height: 52px;
+    border-radius: 14px;
+    border: 1px solid #d8d8d8;
+    padding: 0 14px;
+    font-size: 15px;
+    box-shadow: none !important;
+}
+
+.custom-input:focus {
+   border-color: #2e7d32;
+   box-shadow: 0 0 0 3px rgba(46,125,50,0.15);
+}
+
+
+.upload-box {
+    border: 1px dashed #cfcfcf;
+    border-radius: 16px;
+    background: #fafafa;
+    padding: 22px;
+    text-align: center;
+}
+
+.upload-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.upload-subtitle {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 12px;
+}
+
+.file-input {
+    padding-top: 10px;
+    height: auto;
+}
+
+.register-btn {
+    width: 100%;
+    height: 56px;
+    border: none;
+    border-radius: 28px;
+    background: #2e7d32;
+    color: white;
+    font-size: 19px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.register-btn:hover {
+    background: #1b5e20;
+}
+
+@media (max-width: 768px) {
+    .register-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .register-card {
+        padding: 24px;
+    }
+
+    .register-title {
+        font-size: 34px;
+        color: #1b5e20
+    }
+}

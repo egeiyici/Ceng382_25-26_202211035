@@ -1,8 +1,0 @@
- [1] OpenAI, "creating table" ChatGPT shared conversation.
- [Online]. Available: https://chatgpt.com/g/g-p-6998221ef5388191a6528a8752afe068-ceng-382/c/69aaa422-8bd8-8389-9412-6b0aa66faa4a
- Accessed: March. 6, 2026.
-
-  [2] OpenAI, "merging two websites" ChatGPT shared conversation.
- [Online]. Available: https://chatgpt.com/g/g-p-6998221ef5388191a6528a8752afe068-ceng-382/c/69aed0cf-ada0-8389-84d4-3ffcb0f9ddd8
- Accessed: March. 11, 2026.
-
