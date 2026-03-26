@@ -1,0 +1,56 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="register-page">
+    <div class="register-card">
+        <h1 class="register-title">Login</h1>
+        <p class="register-subtitle">Sign in to access your account</p>
+
+        <form id="account" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="register-grid">
+                <div class="form-group full-width">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="form-control custom-input" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control custom-input" autocomplete="current-password" aria-required="true" placeholder="Password" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group full-width">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                        <label class="form-check-label" asp-for="Input.RememberMe">
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="full-width">
+                    <button id="login-submit" type="submit" class="register-btn">Login</button>
+                </div>
+
+                <div class="full-width text-center mt-2">
+                    <p>
+                        <a asp-page="./ForgotPassword">Forgot your password?</a>
+                    </p>
+                    <p>
+                        <a asp-page="./Register">Create a new account</a>
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
