@@ -1,10 +1,219 @@
 ﻿@page
-@model IndexModel
+@model Ceng382_25_26_202211035.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+
+    <div class="card shadow p-4 mb-4">
+        <h2 class="mb-3">Registered Users</h2>
+
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Profile Photo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.Name</td>
+                        <td>@user.Surname</td>
+                        <td>@user.Address</td>
+                        <td>@user.Email</td>
+                        <td>
+                            @if (user.ProfilePhoto != null && user.ContentType != null)
+                            {
+                                var base64 = Convert.ToBase64String(user.ProfilePhoto);
+                                var imageSrc = $"data:{user.ContentType};base64,{base64}";
+                                <img src="@imageSrc" alt="Profile Photo" width="60" height="60" style="object-fit:cover; border-radius:8px;" />
+                            }
+                            else
+                            {
+                                <span>No Photo</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card shadow p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Öğrenci Not Tablosu</h2>
+
+            <button onclick="calculateGrades()" class="btn btn-success">
+                Hesapla
+            </button>
+        </div>
+
+        <table class="table table-bordered text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Öğrenci</th>
+                    <th>Vize</th>
+                    <th>Final</th>
+                    <th>Harf Notu</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model.Students)
+                {
+                    <tr>
+                        <td>@student.Id</td>
+                        <td>@student.Name</td>
+                        <td class="midterm">@student.Midterm</td>
+                        <td class="final">@student.Final</td>
+                        <td class="letter"></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="mt-3 text-start">
+            <strong>Hesaplama Metodu:</strong><br />
+            Ortalama = Vize %40 + Final %60
+        </div>
+    </div>
 </div>
+
+<div class="card shadow p-4 mb-4">
+    <h2 class="mb-3">Gallery Preview (JavaScript)</h2>
+
+    <div class="mb-3">
+        <input type="file" id="jsGalleryInput" class="form-control" accept="image/*" multiple />
+    </div>
+
+    <div id="jsGalleryPreview" class="d-flex flex-wrap gap-3"></div>
+</div>
+
+<div class="card shadow p-4 mb-4">
+    <h2 class="mb-3">Gallery Upload (C#)</h2>
+
+    <form method="post" enctype="multipart/form-data" asp-page-handler="UploadGallery">
+        <div class="mb-3">
+            <input type="file" name="GalleryFiles" class="form-control" accept="image/*" multiple />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Upload Images</button>
+    </form>
+</div>
+
+<div class="card shadow p-4 mb-4">
+    <h2 class="mb-3">Saved Gallery</h2>
+
+    <div class="d-flex flex-wrap gap-3">
+        @if (Model.Images != null && Model.Images.Count > 0)
+        {
+            @foreach (var image in Model.Images)
+            {
+                var base64 = Convert.ToBase64String(image.ImageData);
+                var imageSrc = $"data:{image.ContentType};base64,{base64}";
+
+                <div class="border rounded p-2 text-center" style="width: 170px;">
+                    <img src="@imageSrc" alt="@image.FileName"
+                         style="width:100%; height:120px; object-fit:cover; border-radius:8px;" />
+                    <small class="d-block mt-2">@image.FileName</small>
+                    <small class="text-muted">@image.Size bytes</small>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No images uploaded yet.</p>
+        }
+    </div>
+</div>
+
+<div class="card shadow p-4 mt-4">
+    <h2 class="mb-3">Security Analysis</h2>
+
+    <h5>Vulnerability: Unrestricted File Upload</h5>
+
+    <p>
+        The application allows users to upload profile photos during registration.
+        However, the uploaded file type and content are not strictly validated on the server side.
+        The system accepts the file and stores its binary data directly in the database.
+    </p>
+
+    <p>
+        This vulnerability appears in the registration process, especially in the file upload logic
+        inside the Register page model, where the uploaded file is copied into memory and saved
+        without detailed validation of file extension, MIME type, or file signature.
+    </p>
+
+    <p>
+        If this issue is not fixed, attackers may upload unexpected or malicious files disguised as images.
+        This may lead to storage abuse, security risks, or unauthorized content being stored in the system.
+        In larger systems, this kind of weakness may also contribute to malware hosting or data handling problems.
+    </p>
+</div>
+
+<script>
+    function calculateGrades() {
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+            const midtermCell = row.querySelector(".midterm");
+            const finalCell = row.querySelector(".final");
+            const letterCell = row.querySelector(".letter");
+
+            if (!midtermCell || !finalCell || !letterCell) return;
+
+            const midterm = parseFloat(midtermCell.innerText);
+            const finalExam = parseFloat(finalCell.innerText);
+
+            const average = (midterm * 0.4) + (finalExam * 0.6);
+
+            let letter = "";
+
+            if (average >= 90) letter = "AA";
+            else if (average >= 85) letter = "BA";
+            else if (average >= 80) letter = "BB";
+            else if (average >= 75) letter = "CB";
+            else if (average >= 70) letter = "CC";
+            else if (average >= 65) letter = "DC";
+            else if (average >= 60) letter = "DD";
+            else if (average >= 50) letter = "FD";
+            else letter = "FF";
+
+            letterCell.innerText = letter;
+        });
+    }
+
+    const jsGalleryInput = document.getElementById("jsGalleryInput");
+    const jsGalleryPreview = document.getElementById("jsGalleryPreview");
+
+    if (jsGalleryInput && jsGalleryPreview) {
+        jsGalleryInput.addEventListener("change", function () {
+            jsGalleryPreview.innerHTML = "";
+
+            Array.from(this.files).forEach(file => {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "border rounded p-2 text-center";
+                    wrapper.style.width = "140px";
+
+                    wrapper.innerHTML = `
+                        <img src="${e.target.result}" alt="preview" style="width:100%; height:100px; object-fit:cover; border-radius:8px;" />
+                        <small class="d-block mt-2">${file.name}</small>
+                    `;
+
+                    jsGalleryPreview.appendChild(wrapper);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        });
+    }
+</script>

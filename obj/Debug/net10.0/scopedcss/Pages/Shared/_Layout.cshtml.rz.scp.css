@@ -40,9 +40,9 @@ button.accept-policy[b-ck7cifdw30] {
 }
 
 .footer[b-ck7cifdw30] {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+    position: static;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+    margin-top: auto;
 }

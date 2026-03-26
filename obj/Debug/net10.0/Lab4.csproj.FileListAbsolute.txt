@@ -717,7 +717,6 @@
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/nezrqnk58p-{0}-muycvpuwrr-muycvpuwrr.gz
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/v0zgfp0y55-{0}-87fc7y1x7t-87fc7y1x7t.gz
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/yfc7ypekbg-{0}-mlv21k5csn-mlv21k5csn.gz
-/Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/bepkeb4wci-{0}-he8jvdnl5a-he8jvdnl5a.gz
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/41vkldy8pm-{0}-61n19gt1b8-61n19gt1b8.gz
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/12f4886m2b-{0}-fr7q2aak1r-fr7q2aak1r.gz
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/g2fidupwji-{0}-bqjiyaj88i-bqjiyaj88i.gz
@@ -779,8 +778,6 @@
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/lhxz1vlyuq-{0}-muycvpuwrr-muycvpuwrr.gz
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/kibx6tvhxo-{0}-87fc7y1x7t-87fc7y1x7t.gz
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/cjbfpnv3yn-{0}-jfsiqqwiad-jfsiqqwiad.gz
-/Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/vk7bwoq3sl-{0}-blg4lo26v3-blg4lo26v3.gz
-/Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/djqs2atvcl-{0}-blg4lo26v3-blg4lo26v3.gz
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/staticwebassets.build.json
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/staticwebassets.build.json.cache
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/staticwebassets.development.json
@@ -792,3 +789,7 @@
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/Lab4.pdb
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/Lab4.genruntimeconfig.cache
 /Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/ref/Lab4.dll
+/Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/bin/Debug/net10.0/app.db
+/Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/vk7bwoq3sl-{0}-x2smtn7kg6-x2smtn7kg6.gz
+/Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/djqs2atvcl-{0}-x2smtn7kg6-x2smtn7kg6.gz
+/Users/dorukegeiyici/Desktop/Ceng382_25-26_202211035/obj/Debug/net10.0/compressed/bepkeb4wci-{0}-3a9amvloju-3a9amvloju.gz
