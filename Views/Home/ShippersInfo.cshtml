@@ -1,0 +1,49 @@
+@model List<Northwind.Mvc.Models.ShippersInfo>
+
+@{
+    ViewData["Title"] = "Shippers Info";
+}
+
+<div class="text-center mt-4 mb-4">
+    <h1 class="display-4">Northwind Shipping Dashboard</h1>
+    <p class="lead">Viewing all 9 attributes from ShippersContactInfo table.</p>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-dark text-white fw-bold">
+        Complete Contact List
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-bordered table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Shipper ID</th>
+                    <th>Email</th>
+                    <th>Website</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Post Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.ShipperId</td>
+                        <td><a href="mailto:@item.Email">@item.Email</a></td>
+                        <td><a href="@item.Website" target="_blank">Visit</a></td>
+                        <td>@item.Phone</td>
+                        <td>@item.Address</td>
+                        <td>@item.City</td>
+                        <td>@item.Country</td>
+                        <td>@item.PostCode</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
