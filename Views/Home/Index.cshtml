@@ -1,75 +1,10 @@
-﻿@model IEnumerable<Ceng382_25_26_202211035.Models.Shipper>
+﻿@model IEnumerable<Ceng382_25_26_202211035.Models.ShipperDisplayViewModel>
 
 @{
     ViewData["Title"] = "Home Page";
-
-    string[] emails =
-    {
-        "contact@bluerocket.com",
-        "info@moonline.de",
-        "support@crimsonturtle.co.uk",
-        "hello@pixelcargo.fr",
-        "team@novadelivery.it"
-    };
-
-    string[] websites =
-    {
-        "www.bluerocket.com",
-        "www.moonline.de",
-        "www.crimsonturtle.co.uk",
-        "www.pixelcargo.fr",
-        "www.novadelivery.it"
-    };
-
-    string[] phones =
-    {
-        "+1 212 555 1234",
-        "+49 30 123456",
-        "+44 20 7946 0958",
-        "+33 1 42 68 5300",
-        "+39 06 6982 0001"
-    };
-
-    string[] addresses =
-    {
-        "350 5th Ave",
-        "Alexanderplatz 1",
-        "221B Baker Street",
-        "10 Avenue des Champs-Élysées",
-        "Via del Corso 305"
-    };
-
-    string[] cities =
-    {
-        "New York",
-        "Berlin",
-        "London",
-        "Paris",
-        "Rome"
-    };
-
-    string[] countries =
-    {
-        "USA",
-        "Germany",
-        "United Kingdom",
-        "France",
-        "Italy"
-    };
-
-    string[] postCodes =
-    {
-        "10001",
-        "10178",
-        "NW1 6XE",
-        "75008",
-        "00186"
-    };
-
-    int i = 0;
 }
 
-<h2>Shippers Table</h2>
+<h2>Hard Delete Table</h2>
 
 <table class="table table-bordered table-striped table-hover">
     <thead>
@@ -83,36 +18,82 @@
             <th>City</th>
             <th>Country</th>
             <th>PostCode</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td>@(i + 1)</td>
-
+                <td>@item.Id</td>
+                <td>@item.ShipperId</td>
+                <td>@item.Email</td>
                 <td>
-                    <a asp-controller="Home" asp-action="ProductDetail" asp-route-id="@item.ShipperId">
-                        @item.ShipperId
+                    <a href="https://@item.Website" target="_blank">
+                        @item.Website
                     </a>
                 </td>
-
-                <td>@emails[i % emails.Length]</td>
-
+                <td>@item.Phone</td>
+                <td>@item.Address</td>
+                <td>@item.City</td>
+                <td>@item.Country</td>
+                <td>@item.PostCode</td>
                 <td>
-                    <a href="https://@websites[i % websites.Length]" target="_blank">
-                        @websites[i % websites.Length]
-                    </a>
-                </td>
+                    <a asp-action="Edit" asp-route-id="@item.ShipperId" class="btn btn-sm btn-warning">Edit</a>
 
-                <td>@phones[i % phones.Length]</td>
-                <td>@addresses[i % addresses.Length]</td>
-                <td>@cities[i % cities.Length]</td>
-                <td>@countries[i % countries.Length]</td>
-                <td>@postCodes[i % postCodes.Length]</td>
+                    <form asp-action="HardDelete" asp-route-id="@item.ShipperId" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
             </tr>
+        }
+    </tbody>
+</table>
 
-            i++;
+<hr />
+
+<h2>Soft Delete Table</h2>
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>ShipperId</th>
+            <th>Email</th>
+            <th>Website</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>PostCode</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(x => x.IsVisible))
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.ShipperId</td>
+                <td>@item.Email</td>
+                <td>
+                    <a href="https://@item.Website" target="_blank">
+                        @item.Website
+                    </a>
+                </td>
+                <td>@item.Phone</td>
+                <td>@item.Address</td>
+                <td>@item.City</td>
+                <td>@item.Country</td>
+                <td>@item.PostCode</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ShipperId" class="btn btn-sm btn-warning">Edit</a>
+
+                    <form asp-action="SoftDelete" asp-route-id="@item.ShipperId" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

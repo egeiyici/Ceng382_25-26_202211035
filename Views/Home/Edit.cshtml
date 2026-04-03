@@ -1,0 +1,59 @@
+@model Ceng382_25_26_202211035.Models.ShipperDisplayViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit Row</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="ShipperId" />
+
+    <div class="mb-3">
+        <label asp-for="Id" class="form-label"></label>
+        <input asp-for="Id" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ShipperId" class="form-label"></label>
+        <input asp-for="ShipperId" class="form-control" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Website" class="form-label"></label>
+        <input asp-for="Website" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Phone" class="form-label"></label>
+        <input asp-for="Phone" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label"></label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="City" class="form-label"></label>
+        <input asp-for="City" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Country" class="form-label"></label>
+        <input asp-for="Country" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PostCode" class="form-label"></label>
+        <input asp-for="PostCode" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

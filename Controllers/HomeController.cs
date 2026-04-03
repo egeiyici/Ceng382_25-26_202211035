@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ceng382_25_26_202211035.Models;
+
 namespace Ceng382_25_26_202211035.Controllers;
 
 public class HomeController : Controller
@@ -12,46 +13,98 @@ public class HomeController : Controller
         _db = db;
     }
 
-    public async Task<IActionResult> Index()
-{
-    var shippers = await _db.Shippers.ToListAsync();
-    return View(shippers);
-}
-    public async Task<IActionResult> ProductDetail(int? id)
+    public IActionResult Index()
     {
-        if (!id.HasValue)
-        {
-            return BadRequest("You must pass a product ID in the route, for example, /Home/ProductDetail/21");
-        }
-
-        Product? model = await _db.Products
-            .Include(p => p.Category)
-            .SingleOrDefaultAsync(p => p.ProductId == id);
-
-        if (model is null)
-        {
-            return NotFound($"ProductId {id} not found.");
-        }
-
-        return View(model);
+        return View(FakeShipperStore.Data);
     }
 
-    public IActionResult ModelBinding()
+    public IActionResult Edit(int id)
     {
-        return View();
+        var item = FakeShipperStore.Data.FirstOrDefault(x => x.ShipperId == id);
+
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        return View(item);
     }
 
     [HttpPost]
-    public IActionResult ModelBinding(Thing thing)
+    public IActionResult Edit(int id, ShipperDisplayViewModel model)
     {
-        HomeModelBindingViewModel model = new(
-            Thing: thing,
-            HasErrors: !ModelState.IsValid,
-            ValidationErrors: ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage)
-        );
+        if (id != model.ShipperId)
+        {
+            return BadRequest();
+        }
 
-        return View(model);
+        var item = FakeShipperStore.Data.FirstOrDefault(x => x.ShipperId == id);
+
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        item.Id = model.Id;
+        item.Email = model.Email;
+        item.Website = model.Website;
+        item.Phone = model.Phone;
+        item.Address = model.Address;
+        item.City = model.City;
+        item.Country = model.Country;
+        item.PostCode = model.PostCode;
+        item.IsVisible = model.IsVisible;
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> HardDelete(int id)
+    {
+        var shipper = await _db.Shippers.FindAsync(id);
+
+        if (shipper != null)
+        {
+            var orders = await _db.Orders
+                .Where(o => o.ShipVia == id)
+                .ToListAsync();
+
+            var orderIds = orders.Select(o => o.OrderId).ToList();
+
+            if (orderIds.Any())
+            {
+                var orderDetails = await _db.OrderDetails
+                    .Where(od => orderIds.Contains(od.OrderId))
+                    .ToListAsync();
+
+                _db.OrderDetails.RemoveRange(orderDetails);
+            }
+
+            _db.Orders.RemoveRange(orders);
+            _db.Shippers.Remove(shipper);
+
+            await _db.SaveChangesAsync();
+        }
+
+        var fakeItem = FakeShipperStore.Data.FirstOrDefault(x => x.ShipperId == id);
+        if (fakeItem != null)
+        {
+            FakeShipperStore.Data.Remove(fakeItem);
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    public IActionResult SoftDelete(int id)
+    {
+        var item = FakeShipperStore.Data.FirstOrDefault(x => x.ShipperId == id);
+
+        if (item != null)
+        {
+            item.IsVisible = false;
+        }
+
+        return RedirectToAction(nameof(Index));
     }
 }
