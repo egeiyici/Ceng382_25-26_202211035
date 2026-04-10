@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Food4Everyone</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="page-shell">
+
+        <aside class="sidebar" id="sidebar">
+            <div class="brand-box">
+                <h2>Food4All</h2>
+                <p>Foods Are Everywhere,Food4Everyone</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a asp-controller="Home" asp-action="Index">Home</a>
+                <a asp-controller="Home" asp-action="Privacy">About</a>
+                <a href="#">Menu</a>
+                <a href="#">Restaurants</a>
+                <a href="#">Orders</a>
+                <a href="#">Contact</a>
+            </nav>
+        </aside>
+
+        <div class="main-area">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button id="menuToggle" type="button">☰</button>
+                    <span class="logo-text">F4E</span>
+                </div>
+                <div class="topbar-right">
+                    <span>Welcome</span>
+                </div>
+            </header>
+
+            <main class="content-area">
+                @RenderBody()
+            </main>
+
+            <footer class="footer">
+                <p>&copy; 2026 - Food4Everyone</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById("menuToggle");
+        const sidebar = document.getElementById("sidebar");
+
+        toggleBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("collapsed");
+        });
+    </script>
+</body>
+</html>
