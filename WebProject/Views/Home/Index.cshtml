@@ -1,9 +1,26 @@
-﻿@{
+﻿@model List<WebProject.Models.MenuItem>
+
+@{
     ViewData["Title"] = "Home";
 }
 
-<div>
-    <h1>Welcome to Food4Everyone</h1>
-    <p>Foods are everywhere, food 4 everyone.</p>
-    <p>This is the Week 1 UI skeleton of the catering web project.</p>
-</div>
+<h1>Available Menus</h1>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No menu items available yet.</p>
+}
+else
+{
+    <div>
+        @foreach (var item in Model)
+        {
+            <div style="border:1px solid #ccc; padding:15px; margin-bottom:15px; border-radius:8px; background-color:white;">
+                <h3>@item.Name</h3>
+                <p><strong>Price:</strong> @item.Price ₺</p>
+                <p><strong>Description:</strong> @item.Description</p>
+                <p><strong>Caretaker ID:</strong> @item.CaretakerId</p>
+            </div>
+        }
+    </div>
+}

@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="page-shell">
-
+        <partial name="_LoginPartial" />
         <aside class="sidebar" id="sidebar">
             <div class="brand-box">
                 <h2>Food4All</h2>
@@ -18,6 +18,8 @@
             <nav class="sidebar-nav">
                 <a asp-controller="Home" asp-action="Index">Home</a>
                 <a asp-controller="Home" asp-action="Privacy">About</a>
+                <a asp-controller="MenuItems" asp-action="Index">All Menus</a>
+                <a asp-controller="MenuItems" asp-action="Create">Create Menu</a>
                 <a href="#">Menu</a>
                 <a href="#">Restaurants</a>
                 <a href="#">Orders</a>
@@ -54,5 +56,6 @@
             sidebar.classList.toggle("collapsed");
         });
     </script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
