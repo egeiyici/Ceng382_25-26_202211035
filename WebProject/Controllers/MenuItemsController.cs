@@ -25,13 +25,14 @@ namespace WebProject.Controllers
 
         // GET: MenuItems
         public async Task<IActionResult> Index()
-        {
-            var menuItems = await _context.MenuItems
-                .Include(m => m.Caretaker)
-                .ToListAsync();
+{
+    var menuItems = await _context.MenuItems
+        .Include(m => m.Caretaker)
+        .Include(m => m.Ratings)
+        .ToListAsync();
 
-            return View(menuItems);
-        }
+    return View(menuItems);
+}
 
         // GET: MenuItems/Details/5
         public async Task<IActionResult> Details(int? id)

@@ -2,11 +2,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebProject.Data;
 using WebProject.Models;
+using WebProject.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<GoogleMapsService>();
 builder.Services.AddRazorPages();
+builder.Services.AddSession();
+builder.Services.AddScoped<WebProject.Services.LogService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -30,6 +35,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
+app.UseSession();
 app.UseAuthorization();
 
 app.MapStaticAssets();

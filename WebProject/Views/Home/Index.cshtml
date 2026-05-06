@@ -2,9 +2,15 @@
 
 @{
     ViewData["Title"] = "Home";
+    var caretakerRatings = ViewBag.CaretakerRatings as Dictionary<string, double>;
 }
 
 <h1>Available Menus</h1>
+
+@if (ViewBag.LocationFilterMessage != null)
+{
+    <p><strong>Location Filter:</strong> @ViewBag.LocationFilterMessage</p>
+}
 
 @if (Model == null || !Model.Any())
 {
@@ -15,11 +21,47 @@ else
     <div>
         @foreach (var item in Model)
         {
+            var averageRating = item.Ratings != null && item.Ratings.Any()
+                ? item.Ratings.Average(r => r.Score)
+                : 0;
+
+            var caretakerAverageRating = 0.0;
+
+            if (caretakerRatings != null && item.CaretakerId != null && caretakerRatings.ContainsKey(item.CaretakerId))
+            {
+                caretakerAverageRating = caretakerRatings[item.CaretakerId];
+            }
+
             <div style="border:1px solid #ccc; padding:15px; margin-bottom:15px; border-radius:8px; background-color:white;">
                 <h3>@item.Name</h3>
                 <p><strong>Price:</strong> @item.Price ₺</p>
+                <p><strong>Menu Rating:</strong> ⭐ @averageRating.ToString("0.0")</p>
+                <p><strong>Caretaker:</strong> @item.Caretaker?.Email</p>
+                <p><strong>Caretaker Rating:</strong> ⭐ @caretakerAverageRating.ToString("0.0")</p>
                 <p><strong>Description:</strong> @item.Description</p>
-                <p><strong>Caretaker ID:</strong> @item.CaretakerId</p>
+
+                <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                    <input type="hidden" name="menuItemId" value="@item.Id" />
+
+                    @if (item.MenuOptions != null && item.MenuOptions.Any())
+                    {
+                        <p><strong>Customization Options:</strong></p>
+
+                        @foreach (var option in item.MenuOptions)
+                        {
+                            <div>
+                                <input type="checkbox" name="selectedOptionIds" value="@option.Id" />
+                                <label>@option.OptionName (+@option.ExtraPrice ₺)</label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p><em>No customization options.</em></p>
+                    }
+
+                    <button type="submit">Add to Cart</button>
+                </form>
             </div>
         }
     </div>

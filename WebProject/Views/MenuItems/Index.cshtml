@@ -1,53 +1,44 @@
 @model IEnumerable<WebProject.Models.MenuItem>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Menu Items";
 }
 
-<h1>Index</h1>
+<h1>Menu Items</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New Menu Item</a>
 </p>
-<table class="table">
+
+<table style="width:100%; background:white; border-collapse:collapse;">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Caretaker)
-            </th>
-            <th></th>
+            <th style="padding:10px; border:1px solid #ddd;">Name</th>
+            <th style="padding:10px; border:1px solid #ddd;">Price</th>
+            <th style="padding:10px; border:1px solid #ddd;">Rating</th>
+            <th style="padding:10px; border:1px solid #ddd;">Description</th>
+            <th style="padding:10px; border:1px solid #ddd;">Caretaker</th>
+            <th style="padding:10px; border:1px solid #ddd;">Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Caretaker.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            var averageRating = item.Ratings != null && item.Ratings.Any()
+                ? item.Ratings.Average(r => r.Score)
+                : 0;
+
+            <tr>
+                <td style="padding:10px; border:1px solid #ddd;">@item.Name</td>
+                <td style="padding:10px; border:1px solid #ddd;">@item.Price ₺</td>
+                <td style="padding:10px; border:1px solid #ddd;">⭐ @averageRating.ToString("0.0")</td>
+                <td style="padding:10px; border:1px solid #ddd;">@item.Description</td>
+                <td style="padding:10px; border:1px solid #ddd;">@item.Caretaker?.Email</td>
+                <td style="padding:10px; border:1px solid #ddd;">
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-controller="MenuOptions" asp-action="Create" asp-route-menuItemId="@item.Id">Add Option</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

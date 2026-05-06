@@ -1,0 +1,36 @@
+@model List<WebProject.Models.LogEntry>
+
+@{
+    ViewData["Title"] = "System Logs";
+}
+
+<h1>System Logs</h1>
+
+@if (!Model.Any())
+{
+    <p>No logs recorded yet.</p>
+}
+else
+{
+    <table style="width:100%; background:white; border-collapse:collapse;">
+        <thead>
+            <tr>
+                <th style="padding:10px; border:1px solid #ddd;">Date</th>
+                <th style="padding:10px; border:1px solid #ddd;">Event Type</th>
+                <th style="padding:10px; border:1px solid #ddd;">Description</th>
+                <th style="padding:10px; border:1px solid #ddd;">User ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model)
+            {
+                <tr>
+                    <td style="padding:10px; border:1px solid #ddd;">@log.CreatedAt</td>
+                    <td style="padding:10px; border:1px solid #ddd;">@log.EventType</td>
+                    <td style="padding:10px; border:1px solid #ddd;">@log.Description</td>
+                    <td style="padding:10px; border:1px solid #ddd;">@log.UserId</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

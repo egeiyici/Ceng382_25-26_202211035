@@ -1,0 +1,67 @@
+@model List<WebProject.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Cart";
+    decimal total = Model.Sum(x => x.LineTotal);
+}
+
+<h1>Your Cart</h1>
+
+@if (!Model.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table style="width:100%; background:white; border-collapse:collapse;">
+        <thead>
+            <tr>
+                <th style="padding:10px; border:1px solid #ddd;">Item</th>
+                <th style="padding:10px; border:1px solid #ddd;">Options</th>
+                <th style="padding:10px; border:1px solid #ddd;">Unit Price</th>
+                <th style="padding:10px; border:1px solid #ddd;">Customization</th>
+                <th style="padding:10px; border:1px solid #ddd;">Quantity</th>
+                <th style="padding:10px; border:1px solid #ddd;">Line Total</th>
+                <th style="padding:10px; border:1px solid #ddd;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="padding:10px; border:1px solid #ddd;">@item.MenuItemName</td>
+                    <td style="padding:10px; border:1px solid #ddd;">
+                        @if (item.SelectedOptionNames.Any())
+                        {
+                            @string.Join(", ", item.SelectedOptionNames)
+                        }
+                        else
+                        {
+                            <span>No customization</span>
+                        }
+                    </td>
+                    <td style="padding:10px; border:1px solid #ddd;">@item.UnitPrice ₺</td>
+                    <td style="padding:10px; border:1px solid #ddd;">@item.CustomizationTotal ₺</td>
+                    <td style="padding:10px; border:1px solid #ddd;">
+                        <form asp-controller="Cart" asp-action="UpdateQuantity" method="post">
+                            <input type="hidden" name="menuItemId" value="@item.MenuItemId" />
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" style="width:70px;" />
+                            <button type="submit">Update</button>
+                        </form>
+                    </td>
+                    <td style="padding:10px; border:1px solid #ddd;">@item.LineTotal ₺</td>
+                    <td style="padding:10px; border:1px solid #ddd;">
+                        <form asp-controller="Cart" asp-action="Remove" method="post">
+                            <input type="hidden" name="menuItemId" value="@item.MenuItemId" />
+                            <button type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h2>Total: @total ₺</h2>
+
+    <a asp-controller="Payment" asp-action="Checkout">Proceed to Payment</a>
+}

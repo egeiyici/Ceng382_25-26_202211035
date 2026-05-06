@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Payment Successful";
+}
+
+<h1>Payment Successful</h1>
+
+<p>Your order has been created successfully.</p>
+
+<p><strong>Order ID:</strong> @ViewBag.OrderId</p>
+
+<a asp-controller="Home" asp-action="Index">Back to Home</a>
+
+<br />
+<br />
+
+<a asp-controller="Ratings" asp-action="Create" asp-route-orderId="@ViewBag.OrderId">
+    Rate This Order
+</a>

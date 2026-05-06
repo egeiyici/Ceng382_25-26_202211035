@@ -1,0 +1,65 @@
+@model WebProject.Models.Order
+
+@{
+    ViewData["Title"] = "Rate Order";
+}
+
+<h1>Rate Your Order</h1>
+
+<p><strong>Order ID:</strong> @Model.Id</p>
+
+@if (!Model.OrderItems.Any())
+{
+    <p>No order items found.</p>
+}
+else
+{
+    @foreach (var item in Model.OrderItems)
+    {
+        <div style="background:white; border:1px solid #ddd; padding:15px; margin-bottom:20px; border-radius:8px;">
+            <h3>@item.MenuItem?.Name</h3>
+
+            <form asp-controller="Ratings" asp-action="Create" method="post">
+                <input type="hidden" name="orderId" value="@Model.Id" />
+                <input type="hidden" name="menuItemId" value="@item.MenuItemId" />
+                <input type="hidden" name="caretakerId" value="@item.MenuItem?.CaretakerId" />
+
+                <h4>Menu Item Rating</h4>
+
+                <label>Score</label>
+                <select name="menuScore">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <br />
+
+                <label>Comment</label>
+                <textarea name="menuComment"></textarea>
+
+                <h4>Caretaker Rating</h4>
+
+                <label>Score</label>
+                <select name="caretakerScore">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <br />
+
+                <label>Comment</label>
+                <textarea name="caretakerComment"></textarea>
+
+                <br /><br />
+
+                <button type="submit">Submit Rating</button>
+            </form>
+        </div>
+    }
+}
