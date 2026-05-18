@@ -1,0 +1,77 @@
+@model List<WebProject.Models.Order>
+
+@{
+    ViewData["Title"] = "My Catering Orders";
+}
+
+<h1>My Catering Orders</h1>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <h2>No catering orders yet</h2>
+        <p>Your completed catering package purchases will appear here after checkout.</p>
+    </div>
+}
+else
+{
+    <div class="orders-list">
+        @foreach (var order in Model)
+        {
+            var statusClass = order.Status?.ToLower() ?? "completed";
+
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <h2>Catering Order #@order.Id</h2>
+                        <p>@order.CreatedAt</p>
+                    </div>
+
+                    <span class="status-pill @statusClass">@order.Status</span>
+                </div>
+
+                <div class="order-timeline">
+                    <div class="timeline-step active">
+                        <span></span>
+                        <p>Created</p>
+                    </div>
+
+                    <div class="timeline-line"></div>
+
+                    <div class="timeline-step @(order.Status == "Preparing" || order.Status == "Delivered" || order.Status == "Completed" ? "active" : "")">
+                        <span></span>
+                        <p>Preparing</p>
+                    </div>
+
+                    <div class="timeline-line"></div>
+
+                    <div class="timeline-step @(order.Status == "Delivered" || order.Status == "Completed" ? "active" : "")">
+                        <span></span>
+                        <p>Completed</p>
+                    </div>
+                </div>
+
+                <div class="order-items">
+                    @foreach (var item in order.OrderItems)
+                    {
+                        <div class="order-item-row">
+                            <span>@item.MenuItem?.Name x @item.Quantity</span>
+                            <strong>@item.LineTotal.ToString("0.00") ₺</strong>
+                        </div>
+                    }
+                </div>
+
+                <div class="order-footer">
+                    <strong>Total: @order.TotalPrice.ToString("0.00") ₺</strong>
+
+                    <div class="order-actions">
+                        <a asp-controller="Documents" asp-action="Receipt" asp-route-orderId="@order.Id">Receipt</a>
+                        <a asp-controller="Documents" asp-action="Agreement" asp-route-orderId="@order.Id">Agreement</a>
+                        <a asp-controller="Ratings" asp-action="Create" asp-route-orderId="@order.Id">Rate Company</a>
+                        <a asp-controller="Support" asp-action="Chat" asp-route-orderId="@order.Id">Support Chat</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,4 @@
+TO: c2211035@student.cankaya.edu.tr
+SUBJECT: Food4Everyone Two-Factor Login Code
+--------------------------------
+Your two-factor authentication code is: 768758

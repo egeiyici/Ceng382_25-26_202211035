@@ -4,82 +4,168 @@
     ViewData["Title"] = "Register";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>Register</h1>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h2>Create a new account.</h2>
             <hr />
+
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+
+            <div class="form-group-clean">
+                <label asp-for="Input.FullName">Full Name</label>
+                <input asp-for="Input.FullName" class="form-control" autocomplete="name" placeholder="Full Name" />
+                <span asp-validation-for="Input.FullName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-clean">
                 <label asp-for="Input.Email">Email</label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="name@example.com" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
-            <div class="form-floating mb-3">
-    <input asp-for="Input.FullName" class="form-control" />
-    <label asp-for="Input.FullName"></label>
-    <span asp-validation-for="Input.FullName" class="text-danger"></span>
+            <div class="form-group-clean">
+                <label asp-for="Input.RoleName">Role</label>
+                <select asp-for="Input.RoleName" class="form-control" id="roleSelect">
+                    <option value="">Select Role</option>
+                    <option value="User">User</option>
+                    <option value="Caretaker">Caretaker</option>
+                    <option value="Admin">Admin</option>
+                </select>
+                <span asp-validation-for="Input.RoleName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-clean" id="addressBox" style="display:none;">
+    <label asp-for="Input.Address">Restaurant Address</label>
+    <input asp-for="Input.Address"
+           class="form-control"
+           placeholder="Restaurant Address" />
+    <span asp-validation-for="Input.Address" class="text-danger"></span>
 </div>
 
-<div class="form-floating mb-3">
-    <select asp-for="Input.RoleName" class="form-control">
-        <option value="">Select Role</option>
-        <option value="User">User</option>
-        <option value="Caretaker">Caretaker</option>
-        <option value="Admin">Admin</option>
-    </select>
-    <label asp-for="Input.RoleName"></label>
-    <span asp-validation-for="Input.RoleName" class="text-danger"></span>
-</div>
+<div id="mapBox" style="display:none; margin-bottom:22px;">
+    <label style="font-size:18px; font-weight:800; color:#222;">
+        Select Restaurant Location
+    </label>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+    <div id="registerMap"
+         style="height:320px; width:100%; border-radius:14px; margin-top:10px; border:1px solid #ccc;">
+    </div>
+
+    <input asp-for="Input.Latitude" type="hidden" id="latitudeInput" />
+    <input asp-for="Input.Longitude" type="hidden" id="longitudeInput" />
+
+                <p style="font-size:14px; margin-top:8px;">
+                    Click on the map or drag the marker to select your restaurant location.
+                </p>
+            </div>
+
+            <div class="form-group-clean">
                 <label asp-for="Input.Password">Password</label>
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" placeholder="password" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+
+            <div class="form-group-clean">
                 <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" placeholder="password" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+
+            <button id="registerSubmit" type="submit" class="btn btn-lg btn-primary">
+                Register
+            </button>
         </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        let registerMap;
+        let registerMarker;
+
+        function toggleCaretakerFields() {
+            const roleSelect = document.getElementById("roleSelect");
+            const addressBox = document.getElementById("addressBox");
+            const mapBox = document.getElementById("mapBox");
+
+            if (!roleSelect || !addressBox || !mapBox) {
+                return;
+            }
+
+            if (roleSelect.value === "Caretaker") {
+                addressBox.style.display = "block";
+                mapBox.style.display = "block";
+
+                setTimeout(() => {
+                    if (registerMap && registerMarker) {
+                        google.maps.event.trigger(registerMap, "resize");
+                        registerMap.setCenter(registerMarker.getPosition());
+                    }
+                }, 300);
+            } else {
+                addressBox.style.display = "none";
+                mapBox.style.display = "none";
+            }
+        }
+
+        function initRegisterMap() {
+            const mapElement = document.getElementById("registerMap");
+
+            if (!mapElement) {
+                return;
+            }
+
+            const defaultLocation = {
+                lat: 39.9208,
+                lng: 32.8541
+            };
+
+            registerMap = new google.maps.Map(mapElement, {
+                center: defaultLocation,
+                zoom: 14,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+
+            registerMarker = new google.maps.Marker({
+                position: defaultLocation,
+                map: registerMap,
+                draggable: true
+            });
+
+            document.getElementById("latitudeInput").value = defaultLocation.lat.toFixed(6);
+            document.getElementById("longitudeInput").value = defaultLocation.lng.toFixed(6);
+
+            registerMap.addListener("click", function (event) {
+                registerMarker.setPosition(event.latLng);
+
+                document.getElementById("latitudeInput").value = event.latLng.lat().toFixed(6);
+                document.getElementById("longitudeInput").value = event.latLng.lng().toFixed(6);
+            });
+
+            registerMarker.addListener("dragend", function (event) {
+                document.getElementById("latitudeInput").value = event.latLng.lat().toFixed(6);
+                document.getElementById("longitudeInput").value = event.latLng.lng().toFixed(6);
+            });
+
+            toggleCaretakerFields();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const roleSelect = document.getElementById("roleSelect");
+
+            if (roleSelect) {
+                roleSelect.addEventListener("change", toggleCaretakerFields);
+                toggleCaretakerFields();
+            }
+        });
+    </script>
+
+    <script async
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpjxSBocgs6QcqgvtWoQB2M6hiiv2mY9I&callback=initRegisterMap">
+    </script>
 }

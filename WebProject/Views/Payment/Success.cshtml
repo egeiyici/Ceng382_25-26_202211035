@@ -4,15 +4,35 @@
 
 <h1>Payment Successful</h1>
 
-<p>Your order has been created successfully.</p>
+<div class="card-box">
+    <p>Your order has been created successfully.</p>
 
-<p><strong>Order ID:</strong> @ViewBag.OrderId</p>
+    <p><strong>Order ID:</strong> @ViewBag.OrderId</p>
 
-<a asp-controller="Home" asp-action="Index">Back to Home</a>
+    <a class="action-link" asp-controller="Documents" asp-action="Receipt" asp-route-orderId="@ViewBag.OrderId">
+        Download Receipt PDF
+    </a>
 
+    <a class="action-link" asp-controller="Documents" asp-action="Agreement" asp-route-orderId="@ViewBag.OrderId">
+        Download Agreement PDF
+    </a>
+
+    <a class="action-link" asp-controller="Ratings" asp-action="Create" asp-route-orderId="@ViewBag.OrderId">
+        Rate This Order
+    </a>
+
+    <a class="action-link" asp-controller="Home" asp-action="Index">
+        Back to Home
+    </a>
+
+    <br />
 <br />
-<br />
 
-<a asp-controller="Ratings" asp-action="Create" asp-route-orderId="@ViewBag.OrderId">
-    Rate This Order
+<a class="action-link chat-button"
+   asp-controller="Support"
+   asp-action="Chat"
+   asp-route-orderId="@ViewBag.OrderId">
+    Open Support Chat
 </a>
+
+</div>

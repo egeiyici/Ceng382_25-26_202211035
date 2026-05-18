@@ -1,0 +1,175 @@
+@model List<WebProject.Models.MenuItem>
+
+@{
+    ViewData["Title"] = "Catering Packages";
+
+    var caretakerRatings = ViewBag.CaretakerRatings as Dictionary<string, double>;
+}
+
+@if (Model == null || !Model.Any())
+{
+    <div class="empty-state">
+        <h2>No catering packages available</h2>
+
+        <p>
+            This catering company has not added any packages yet.
+        </p>
+    </div>
+}
+else
+{
+    <div class="restaurant-food-grid">
+
+        @foreach (var item in Model)
+        {
+            var averageRating =
+                item.Ratings != null && item.Ratings.Any()
+                ? item.Ratings.Average(r => r.Score)
+                : 0;
+
+            var caretakerAverageRating = 0.0;
+
+            if (caretakerRatings != null &&
+                item.CaretakerId != null &&
+                caretakerRatings.ContainsKey(item.CaretakerId))
+            {
+                caretakerAverageRating =
+                    caretakerRatings[item.CaretakerId];
+            }
+
+            <div class="restaurant-food-card">
+
+                <div class="restaurant-food-image-wrapper">
+
+                    @if (item.ImageData != null)
+                    {
+                        <img class="restaurant-food-image"
+                             src="@Url.Action("Image", "MenuItems", new { id = item.Id })" />
+                    }
+                    else
+                    {
+                        <div class="restaurant-food-image no-image">
+                            No Package Image
+                        </div>
+                    }
+
+                    <div class="restaurant-food-price">
+                        @item.Price.ToString("0.00") ₺
+                    </div>
+
+                </div>
+
+                <div class="restaurant-food-content">
+
+                    <div class="restaurant-food-top">
+
+                        <h2>@item.Name</h2>
+
+                        <div class="restaurant-food-rating">
+                            ⭐ @averageRating.ToString("0.0")
+                        </div>
+
+                    </div>
+
+                    <div class="restaurant-food-description">
+                        @item.Description
+                    </div>
+
+                    <div class="restaurant-food-tags">
+
+                        <span>
+                            ⭐ @caretakerAverageRating.ToString("0.0") Company Rating
+                        </span>
+
+                        <span>
+                            Catering Package
+                        </span>
+
+                    </div>
+
+                    @if (User.IsInRole("User"))
+                    {
+                        @if (item.MenuOptions != null &&
+                       item.MenuOptions.Any())
+                        {
+                            <form asp-controller="Cart"
+                                  asp-action="AddToCart"
+                                  method="post"
+                                  class="add-cart-form">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="menuItemId"
+                                       value="@item.Id" />
+
+                                <div class="option-list">
+
+                                    @foreach (var option in item.MenuOptions)
+                                    {
+                                        <label class="option-card">
+
+                                            <input type="checkbox"
+                                                   name="selectedOptionIds"
+                                                   value="@option.Id" />
+
+                                            <div class="option-content">
+
+                                                <div class="option-left">
+
+                                                    <div class="option-icon">
+                                                        📦
+                                                    </div>
+
+                                                    <div>
+
+                                                        <h4>
+                                                            @option.OptionName
+                                                        </h4>
+
+                                                        <p>
+                                                            Additional catering option
+                                                        </p>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="option-price">
+                                                    +@option.ExtraPrice.ToString("0.00") ₺
+                                                </div>
+
+                                            </div>
+
+                                        </label>
+                                    }
+
+                                </div>
+
+                                <button type="submit"
+                                        class="restaurant-cart-button">
+
+                                    Add Package To Cart
+
+                                </button>
+
+                            </form>
+                        }
+                        else
+                        {
+                            <a class="restaurant-cart-button"
+                               href="/Cart/QuickAdd?menuItemId=@item.Id">
+
+                                Add Package To Cart
+
+                            </a>
+                        }
+                    }
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+}

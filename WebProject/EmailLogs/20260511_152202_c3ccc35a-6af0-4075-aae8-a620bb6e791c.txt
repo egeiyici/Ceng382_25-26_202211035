@@ -1,11 +1,11 @@
 TO: degeiyici@gmail.com
 SUBJECT: New Incoming Food4Everyone Order
 --------------------------------
-Order ID: 5
+Order ID: 11
 Customer: degeiyi@gmail.com
-Total Price: 560,00 ₺
-Order Date: 7.05.2026 00:16:12
+Total Price: 585,00 ₺
+Order Date: 11.05.2026 15:22:02
 Status: Completed
 
 Items:
-- burger x1 | Options: No customization | Line Total: 560,00 ₺
+- burger x1 | Options: extra cheese | Line Total: 585,00 ₺

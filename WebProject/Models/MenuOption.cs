@@ -13,7 +13,10 @@ namespace WebProject.Models
         [Precision(18, 2)]
         public decimal ExtraPrice { get; set; }
 
+        public bool IsPerPerson { get; set; } = true;
+
         public int MenuItemId { get; set; }
+
         public MenuItem? MenuItem { get; set; }
     }
 }

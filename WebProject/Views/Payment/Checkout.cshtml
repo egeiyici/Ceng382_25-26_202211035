@@ -1,74 +1,112 @@
 @model WebProject.Models.PaymentViewModel
 
 @{
-    ViewData["Title"] = "Payment";
+    ViewData["Title"] = "Catering Payment";
 }
 
-<h1>Payment Simulation</h1>
+<h1>Catering Payment</h1>
 
-<h2>Order Summary</h2>
+<div class="payment-layout">
+    <div class="payment-summary-card">
+        <h2>Order Summary</h2>
 
-<table style="width:100%; background:white; border-collapse:collapse; margin-bottom:20px;">
-    <thead>
-        <tr>
-            <th style="padding:10px; border:1px solid #ddd;">Item</th>
-            <th style="padding:10px; border:1px solid #ddd;">Options</th>
-            <th style="padding:10px; border:1px solid #ddd;">Quantity</th>
-            <th style="padding:10px; border:1px solid #ddd;">Line Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.CartItems)
-        {
-            <tr>
-                <td style="padding:10px; border:1px solid #ddd;">@item.MenuItemName</td>
-                <td style="padding:10px; border:1px solid #ddd;">
-                    @if (item.SelectedOptionNames.Any())
-                    {
-                        @string.Join(", ", item.SelectedOptionNames)
-                    }
-                    else
-                    {
-                        <span>No customization</span>
-                    }
-                </td>
-                <td style="padding:10px; border:1px solid #ddd;">@item.Quantity</td>
-                <td style="padding:10px; border:1px solid #ddd;">@item.LineTotal ₺</td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <p>
+            Review your selected catering packages, guest count,
+            and package features before completing the simulated payment.
+        </p>
 
-<h3>Total: @Model.TotalPrice ₺</h3>
+        <div class="payment-package-list">
+            @foreach (var item in Model.CartItems)
+            {
+                <div class="payment-package-row">
+                    <div>
+                        <h3>@item.MenuItemName</h3>
 
-<form asp-action="Checkout" method="post">
-    <div>
-        <label asp-for="CardHolderName"></label>
-        <input asp-for="CardHolderName" />
-        <span asp-validation-for="CardHolderName"></span>
+                        <p>
+                            <strong>People:</strong> @item.PersonCount
+                        </p>
+
+                        <p>
+                            <strong>Base Package:</strong>
+                            @item.UnitPrice.ToString("0.00") ₺
+                        </p>
+
+                        <p>
+                            <strong>Dynamic Package Total:</strong>
+                            @item.PackageBaseTotal.ToString("0.00") ₺
+                        </p>
+
+                        @if (item.SelectedOptionNames.Any())
+                        {
+                            <p>
+                                <strong>Selected Features:</strong>
+                                @string.Join(", ", item.SelectedOptionNames)
+                            </p>
+                        }
+                        else
+                        {
+                            <p>No additional package features selected.</p>
+                        }
+
+                        <span>Quantity: @item.Quantity</span>
+                    </div>
+
+                    <strong>@item.LineTotal.ToString("0.00") ₺</strong>
+                </div>
+            }
+        </div>
+
+        <div class="payment-total">
+            <span>Total Catering Order</span>
+            <strong>@Model.TotalPrice.ToString("0.00") ₺</strong>
+        </div>
     </div>
 
-    <div>
-        <label asp-for="CardNumber"></label>
-        <input asp-for="CardNumber" />
-        <span asp-validation-for="CardNumber"></span>
-    </div>
+    <div class="payment-form-card">
+        <h2>Payment Simulation</h2>
 
-    <div>
-        <label asp-for="ExpirationDate"></label>
-        <input asp-for="ExpirationDate" placeholder="MM/YY" />
-        <span asp-validation-for="ExpirationDate"></span>
-    </div>
+        <p>
+            This is a demo payment screen. No real card transaction is processed.
+        </p>
 
-    <div>
-        <label asp-for="CVV"></label>
-        <input asp-for="CVV" />
-        <span asp-validation-for="CVV"></span>
-    </div>
+        <form asp-action="Checkout" method="post">
+            @Html.AntiForgeryToken()
 
-    <button type="submit">Complete Payment</button>
-</form>
+            <div class="form-group-clean">
+                <label asp-for="CardHolderName">Card Holder Name</label>
+                <input asp-for="CardHolderName" placeholder="Demo User" />
+                <span asp-validation-for="CardHolderName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-clean">
+                <label asp-for="CardNumber">Card Number</label>
+                <input asp-for="CardNumber" placeholder="4111111111111111" maxlength="16" />
+                <span asp-validation-for="CardNumber" class="text-danger"></span>
+            </div>
+
+            <div class="payment-mini-grid">
+                <div class="form-group-clean">
+                    <label asp-for="ExpirationDate">Expiration Date</label>
+                    <input asp-for="ExpirationDate" placeholder="12/28" maxlength="5" />
+                    <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group-clean">
+                    <label asp-for="CVV">CVV</label>
+                    <input asp-for="CVV" placeholder="123" maxlength="3" />
+                    <span asp-validation-for="CVV" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="cart-button">
+                Complete Catering Payment
+            </button>
+        </form>
+    </div>
+</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

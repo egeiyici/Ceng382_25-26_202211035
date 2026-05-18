@@ -1,67 +1,162 @@
 @model List<WebProject.Models.CartItem>
 
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<WebProject.Models.ApplicationUser> UserManager
+
 @{
-    ViewData["Title"] = "Cart";
+    ViewData["Title"] = "Selected Catering Packages";
+
     decimal total = Model.Sum(x => x.LineTotal);
+
+    var currentUser = await UserManager.GetUserAsync(User);
+
+    var hasAddress =
+        currentUser != null &&
+        !string.IsNullOrWhiteSpace(currentUser.Address);
 }
 
-<h1>Your Cart</h1>
+<h1>Selected Catering Packages</h1>
 
 @if (!Model.Any())
 {
-    <p>Your cart is empty.</p>
+    <div class="empty-state">
+        <h2>Your catering cart is empty</h2>
+        <p>Select a catering package from a company to start your order.</p>
+    </div>
 }
 else
 {
-    <table style="width:100%; background:white; border-collapse:collapse;">
-        <thead>
-            <tr>
-                <th style="padding:10px; border:1px solid #ddd;">Item</th>
-                <th style="padding:10px; border:1px solid #ddd;">Options</th>
-                <th style="padding:10px; border:1px solid #ddd;">Unit Price</th>
-                <th style="padding:10px; border:1px solid #ddd;">Customization</th>
-                <th style="padding:10px; border:1px solid #ddd;">Quantity</th>
-                <th style="padding:10px; border:1px solid #ddd;">Line Total</th>
-                <th style="padding:10px; border:1px solid #ddd;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td style="padding:10px; border:1px solid #ddd;">@item.MenuItemName</td>
-                    <td style="padding:10px; border:1px solid #ddd;">
+    <div class="cart-package-list">
+        @foreach (var item in Model)
+        {
+            <div class="cart-package-card">
+
+                <div class="cart-package-main">
+                    <div>
+                        <h2>@item.MenuItemName</h2>
+
+                        <p>
+                            <strong>Guest Count:</strong>
+                            @item.PersonCount person(s)
+                        </p>
+
                         @if (item.SelectedOptionNames.Any())
                         {
-                            @string.Join(", ", item.SelectedOptionNames)
+                            <p>
+                                <strong>Selected package features:</strong>
+                                @string.Join(", ", item.SelectedOptionNames)
+                            </p>
                         }
                         else
                         {
-                            <span>No customization</span>
+                            <p>No additional package features selected.</p>
                         }
-                    </td>
-                    <td style="padding:10px; border:1px solid #ddd;">@item.UnitPrice ₺</td>
-                    <td style="padding:10px; border:1px solid #ddd;">@item.CustomizationTotal ₺</td>
-                    <td style="padding:10px; border:1px solid #ddd;">
-                        <form asp-controller="Cart" asp-action="UpdateQuantity" method="post">
-                            <input type="hidden" name="menuItemId" value="@item.MenuItemId" />
-                            <input type="number" name="quantity" value="@item.Quantity" min="1" style="width:70px;" />
-                            <button type="submit">Update</button>
-                        </form>
-                    </td>
-                    <td style="padding:10px; border:1px solid #ddd;">@item.LineTotal ₺</td>
-                    <td style="padding:10px; border:1px solid #ddd;">
-                        <form asp-controller="Cart" asp-action="Remove" method="post">
-                            <input type="hidden" name="menuItemId" value="@item.MenuItemId" />
-                            <button type="submit">Remove</button>
-                        </form>
-                    </td>
-                </tr>
+                    </div>
+
+                    <div class="cart-package-price">
+                        @item.LineTotal.ToString("0.00") ₺
+                    </div>
+                </div>
+
+                <div class="cart-package-details">
+                    <span>
+                        Base Package:
+                        @item.BasePrice.ToString("0.00") ₺
+                    </span>
+
+                    <span>
+                        Minimum Guests:
+                        @item.MinimumPeople
+                    </span>
+
+                    <span>
+                        Extra Guest Price:
+                        @item.PricePerExtraPerson.ToString("0.00") ₺
+                    </span>
+
+                    <span>
+                        Dynamic Guest Price:
+                        @item.PackageBaseTotal.ToString("0.00") ₺
+                    </span>
+
+                    <span>
+                        Features Total:
+                        @item.CustomizationTotal.ToString("0.00") ₺
+                    </span>
+                </div>
+
+                <div class="cart-package-actions">
+                    <form asp-controller="Cart"
+                          asp-action="Remove"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="menuItemId"
+                               value="@item.MenuItemId" />
+
+                        <button type="submit"
+                                class="danger-button">
+                            Remove Package
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        }
+    </div>
+
+    <div class="cart-summary-card">
+        <div>
+            <h2>Total Catering Order</h2>
+            <p>
+                Group-size pricing and selected package features are included.
+            </p>
+
+            @if (hasAddress)
+            {
+                <div class="current-address-box" style="margin-top:14px;">
+                    <strong>Selected Delivery Address:</strong>
+                    <span>@currentUser!.Address</span>
+                </div>
             }
-        </tbody>
-    </table>
+            else
+            {
+                <div class="current-address-box" style="margin-top:14px;">
+                    <strong>No delivery address selected.</strong>
+                    <span>Please add a delivery address before payment.</span>
+                </div>
+            }
+        </div>
 
-    <h2>Total: @total ₺</h2>
+        <div class="cart-summary-right">
+            <strong>@total.ToString("0.00") ₺</strong>
 
-    <a asp-controller="Payment" asp-action="Checkout">Proceed to Payment</a>
+            @if (hasAddress)
+            {
+                <a class="action-link cart-button"
+                   asp-controller="Payment"
+                   asp-action="Checkout">
+                    Continue to Payment
+                </a>
+
+                <a class="action-link"
+                   asp-controller="Addresses"
+                   asp-action="Index"
+                   asp-route-returnUrl="/Cart">
+                    Change Address
+                </a>
+            }
+            else
+            {
+                <a class="action-link"
+                   asp-controller="Addresses"
+                   asp-action="Index"
+                   asp-route-returnUrl="/Cart">
+                    Add Delivery Address
+                </a>
+            }
+        </div>
+    </div>
 }

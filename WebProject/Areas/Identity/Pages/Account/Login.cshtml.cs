@@ -1,20 +1,12 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using WebProject.Models;
+using WebProject.Services;
 
 namespace WebProject.Areas.Identity.Pages.Account
 {
@@ -22,81 +14,47 @@ namespace WebProject.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<LoginModel> _logger;
+        private readonly EmailService _emailService;
+        private readonly LogService _logService;
 
         public LoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            ILogger<LoginModel> logger)
+            EmailService emailService,
+            LogService logService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _logger = logger;
+            _emailService = emailService;
+            _logService = logService;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [EmailAddress]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (!string.IsNullOrEmpty(ErrorMessage))
-            {
-                ModelState.AddModelError(string.Empty, ErrorMessage);
-            }
-
             returnUrl ??= Url.Content("~/");
 
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
@@ -112,57 +70,74 @@ namespace WebProject.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(
-                    Input.Email,
-                    Input.Password,
-                    Input.RememberMe,
-                    lockoutOnFailure: false);
+                return Page();
+            }
 
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User logged in.");
+            var user = await _userManager.FindByEmailAsync(Input.Email);
 
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
-
-                    if (user != null)
-                    {
-                        if (await _userManager.IsInRoleAsync(user, "Caretaker"))
-                        {
-                            return LocalRedirect("/MenuItems/Create");
-                        }
-
-                        if (await _userManager.IsInRoleAsync(user, "User"))
-                        {
-                            return LocalRedirect("/");
-                        }
-
-                        if (await _userManager.IsInRoleAsync(user, "Admin"))
-                        {
-                            return LocalRedirect("/");
-                        }
-                    }
-
-                    return LocalRedirect(returnUrl);
-                }
-
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
-
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
-                }
-
+            if (user == null)
+            {
+                await _logService.AddLogAsync("Failed Login", $"Failed login attempt for unknown email {Input.Email}.", null);
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return Page();
             }
 
-            return Page();
+            var passwordValid = await _userManager.CheckPasswordAsync(user, Input.Password);
+
+            if (!passwordValid)
+            {
+                await _logService.AddLogAsync("Failed Login", $"Failed login attempt for {Input.Email}.", user.Id);
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return Page();
+            }
+
+            if (user.TwoFactorEnabled == true)
+            {
+                var code = Random.Shared.Next(100000, 999999).ToString();
+
+                HttpContext.Session.SetString("TwoFactorCode", code);
+                HttpContext.Session.SetString("TwoFactorUserId", user.Id);
+                HttpContext.Session.SetString("RememberMe", Input.RememberMe.ToString());
+                HttpContext.Session.SetString("ReturnUrl", returnUrl);
+
+                _emailService.SendOrderEmail(
+                    user.Email!,
+                    "Food4Everyone Two-Factor Login Code",
+                    $"Your two-factor authentication code is: {code}");
+
+                await _logService.AddLogAsync(
+                    "2FA Code Sent",
+                    $"Two-factor authentication code was generated for {user.Email}.",
+                    user.Id);
+
+                return LocalRedirect("/Identity/Account/VerifyTwoFactor");
+            }
+
+            await _signInManager.SignInAsync(user, Input.RememberMe);
+
+            await _logService.AddLogAsync(
+                "Successful Login",
+                $"{user.Email} logged in successfully.",
+                user.Id);
+
+            return await RedirectByRoleAsync(user, returnUrl);
+        }
+
+        private async Task<IActionResult> RedirectByRoleAsync(ApplicationUser user, string returnUrl)
+        {
+            if (await _userManager.IsInRoleAsync(user, "Caretaker"))
+            {
+                return LocalRedirect("/Dashboard");
+            }
+
+            if (await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                return LocalRedirect("/Dashboard");
+            }
+
+            return LocalRedirect("/");
         }
     }
 }

@@ -1,0 +1,158 @@
+@model WebProject.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Delivery Address";
+
+    var currentLat = Model.Latitude ?? 39.9208;
+    var currentLng = Model.Longitude ?? 32.8541;
+}
+
+<h1>Delivery Address</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="location-banner">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["AddressWarning"] != null)
+{
+    <div class="location-banner">
+        @TempData["AddressWarning"]
+    </div>
+}
+
+<div class="address-page-card">
+    <div class="address-info">
+        <h2>Catering Delivery Location</h2>
+
+        <p>
+            Select the delivery location for your catering order. This address will be used
+            to filter nearby catering companies and to prepare your order documents.
+        </p>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Address))
+        {
+            <div class="current-address-box">
+                <strong>Saved Delivery Address:</strong>
+                <span>@Model.Address</span>
+            </div>
+        }
+    </div>
+
+    <form asp-action="UpdateAddress" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="returnUrl"
+               value="@Context.Request.Query["returnUrl"]" />
+
+        <div class="form-group-clean">
+            <label>Address Name / Description</label>
+
+            <input type="text"
+                   name="address"
+                   value="@Model.Address"
+                   placeholder="Example: Office, Kizilay, Ankara" />
+        </div>
+
+        <div id="mapBox" style="margin-bottom:22px;">
+            <label>
+                Select Catering Delivery Location
+            </label>
+
+            <div id="addressMap"
+                 style="height:380px;
+                        width:100%;
+                        display:block;
+                        border-radius:18px;
+                        margin-top:10px;
+                        border:1px solid #E2E8F0;">
+            </div>
+
+            <input type="hidden"
+                   name="latitude"
+                   id="latitudeInput"
+                   value="@currentLat.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+
+            <input type="hidden"
+                   name="longitude"
+                   id="longitudeInput"
+                   value="@currentLng.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+
+            <p style="font-size:14px; margin-top:8px; color:#64748B;">
+                Click on the map or drag the marker to select your catering delivery location.
+            </p>
+        </div>
+
+        <button type="submit" class="action-link">
+            Save Delivery Address
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        let addressMap;
+        let addressMarker;
+
+        function initAddressMap() {
+            const mapElement = document.getElementById("addressMap");
+
+            if (!mapElement) {
+                return;
+            }
+
+            const defaultLocation = {
+                lat: Number("@currentLat.ToString(System.Globalization.CultureInfo.InvariantCulture)"),
+                lng: Number("@currentLng.ToString(System.Globalization.CultureInfo.InvariantCulture)")
+            };
+
+            addressMap = new google.maps.Map(mapElement, {
+                center: defaultLocation,
+                zoom: 14,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+
+            addressMarker = new google.maps.Marker({
+                position: defaultLocation,
+                map: addressMap,
+                draggable: true
+            });
+
+            document.getElementById("latitudeInput").value =
+                defaultLocation.lat.toFixed(6);
+
+            document.getElementById("longitudeInput").value =
+                defaultLocation.lng.toFixed(6);
+
+            addressMap.addListener("click", function (event) {
+                addressMarker.setPosition(event.latLng);
+
+                document.getElementById("latitudeInput").value =
+                    event.latLng.lat().toFixed(6);
+
+                document.getElementById("longitudeInput").value =
+                    event.latLng.lng().toFixed(6);
+            });
+
+            addressMarker.addListener("dragend", function (event) {
+                document.getElementById("latitudeInput").value =
+                    event.latLng.lat().toFixed(6);
+
+                document.getElementById("longitudeInput").value =
+                    event.latLng.lng().toFixed(6);
+            });
+
+            setTimeout(() => {
+                google.maps.event.trigger(addressMap, "resize");
+                addressMap.setCenter(defaultLocation);
+            }, 500);
+        }
+    </script>
+
+    <script async
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpjxSBocgs6QcqgvtWoQB2M6hiiv2mY9I&callback=initAddressMap">
+    </script>
+}

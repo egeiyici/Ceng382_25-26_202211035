@@ -1,0 +1,178 @@
+@model List<WebProject.Models.OrderItem>
+
+@{
+    ViewData["Title"] = "Received Catering Orders";
+
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+    string searchTerm = ViewBag.SearchTerm as string ?? "";
+
+    string GetStatusClass(string? status)
+    {
+        return status switch
+        {
+            "Pending Approval" => "pending",
+            "Approved" => "approved",
+            "Preparing" => "preparing",
+            "Out for Delivery" => "out-for-delivery",
+            "Delivered" => "delivered",
+            "Cancelled" => "cancelled",
+            _ => "pending"
+        };
+    }
+}
+
+<h1>Received Catering Orders</h1>
+
+<div class="card-box">
+    <form method="get">
+        <input type="text"
+               name="searchTerm"
+               value="@searchTerm"
+               placeholder="Search by order number, customer, or package..." />
+
+        <button type="submit">Filter</button>
+
+        <a class="action-link"
+           asp-action="CaretakerOrders">
+            Clear
+        </a>
+    </form>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <h2>No received catering orders</h2>
+        <p>Orders for your catering packages will appear here.</p>
+    </div>
+}
+else
+{
+    <div class="orders-list">
+        @foreach (var item in Model)
+        {
+            var status = item.Order?.Status ?? "Pending Approval";
+            var statusClass = GetStatusClass(status);
+
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <h2>Catering Order #@item.OrderId</h2>
+                        <p>
+                            Customer:
+                            <strong>@item.Order?.User?.Email</strong>
+                        </p>
+                        <p>
+                            Date:
+                            @item.Order?.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                        </p>
+                    </div>
+
+                    <span class="status-pill @statusClass">
+                        @status
+                    </span>
+                </div>
+
+                <div class="order-items">
+                    <div class="order-item-row">
+                        <span>
+                            <strong>Package:</strong>
+                            @item.MenuItem?.Name
+                        </span>
+
+                        <strong>
+                            @item.LineTotal.ToString("0.00") ₺
+                        </strong>
+                    </div>
+
+                    <div class="order-item-row">
+                        <span>
+                            <strong>Guest Count:</strong>
+                            @item.PersonCount
+                        </span>
+
+                        <span>
+                            <strong>Base Total:</strong>
+                            @item.PackageBaseTotal.ToString("0.00") ₺
+                        </span>
+                    </div>
+
+                    <div class="order-item-row">
+                        <span>
+                            <strong>Features Total:</strong>
+                            @item.CustomizationTotal.ToString("0.00") ₺
+                        </span>
+
+                        <span>
+                            <strong>Order Total:</strong>
+                            @item.Order?.TotalPrice.ToString("0.00") ₺
+                        </span>
+                    </div>
+                </div>
+
+                <div class="order-footer">
+                    <form asp-controller="Orders"
+                          asp-action="UpdateStatus"
+                          method="post"
+                          style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:0; padding:0; border:none; box-shadow:none; background:transparent;">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="orderId"
+                               value="@item.OrderId" />
+
+                        <select name="status"
+                                style="min-width:190px; margin:0;">
+                            <option value="Pending Approval" selected="@(status == "Pending Approval")">Pending Approval</option>
+                            <option value="Approved" selected="@(status == "Approved")">Approved</option>
+                            <option value="Preparing" selected="@(status == "Preparing")">Preparing</option>
+                            <option value="Out for Delivery" selected="@(status == "Out for Delivery")">Out for Delivery</option>
+                            <option value="Delivered" selected="@(status == "Delivered")">Delivered</option>
+                            <option value="Cancelled" selected="@(status == "Cancelled")">Cancelled</option>
+                        </select>
+
+                        <button type="submit">
+                            Update Status
+                        </button>
+                    </form>
+
+                    <div class="order-actions">
+                        <a asp-controller="Support"
+                           asp-action="Chat"
+                           asp-route-orderId="@item.OrderId">
+                            Support Chat
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="card-box" style="margin-top:20px;">
+        @if (currentPage > 1)
+        {
+            <a class="action-link"
+               asp-action="CaretakerOrders"
+               asp-route-page="@(currentPage - 1)"
+               asp-route-searchTerm="@searchTerm">
+                Previous
+            </a>
+        }
+
+        <span style="margin:0 10px;">
+            Page @currentPage of @totalPages
+        </span>
+
+        @if (currentPage < totalPages)
+        {
+            <a class="action-link"
+               asp-action="CaretakerOrders"
+               asp-route-page="@(currentPage + 1)"
+               asp-route-searchTerm="@searchTerm">
+                Next
+            </a>
+        }
+    </div>
+}

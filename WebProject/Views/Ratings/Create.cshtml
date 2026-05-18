@@ -1,65 +1,119 @@
 @model WebProject.Models.Order
 
 @{
-    ViewData["Title"] = "Rate Order";
+    ViewData["Title"] = "Rate Catering Order";
 }
 
-<h1>Rate Your Order</h1>
+<h1>Rate Catering Order</h1>
 
-<p><strong>Order ID:</strong> @Model.Id</p>
+<div class="card-box">
+    <p>
+        <strong>Order ID:</strong> #@Model.Id
+    </p>
+
+    <p>
+        Share your feedback about the catering package quality and the catering company experience.
+    </p>
+</div>
 
 @if (!Model.OrderItems.Any())
 {
-    <p>No order items found.</p>
+    <div class="empty-state">
+        <h2>No catering packages found</h2>
+        <p>This order does not contain any packages.</p>
+    </div>
 }
 else
 {
-    @foreach (var item in Model.OrderItems)
-    {
-        <div style="background:white; border:1px solid #ddd; padding:15px; margin-bottom:20px; border-radius:8px;">
-            <h3>@item.MenuItem?.Name</h3>
+    <div class="orders-list">
 
-            <form asp-controller="Ratings" asp-action="Create" method="post">
-                <input type="hidden" name="orderId" value="@Model.Id" />
-                <input type="hidden" name="menuItemId" value="@item.MenuItemId" />
-                <input type="hidden" name="caretakerId" value="@item.MenuItem?.CaretakerId" />
+        @foreach (var item in Model.OrderItems)
+        {
+            <div class="order-card">
 
-                <h4>Menu Item Rating</h4>
+                <div class="order-header">
+                    <div>
+                        <h2>@item.MenuItem?.Name</h2>
+                        <p>Catering package feedback form</p>
+                    </div>
+                </div>
 
-                <label>Score</label>
-                <select name="menuScore">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
+                <form asp-controller="Ratings"
+                      asp-action="Create"
+                      method="post">
 
-                <br />
+                    @Html.AntiForgeryToken()
 
-                <label>Comment</label>
-                <textarea name="menuComment"></textarea>
+                    <input type="hidden"
+                           name="orderId"
+                           value="@Model.Id" />
 
-                <h4>Caretaker Rating</h4>
+                    <input type="hidden"
+                           name="menuItemId"
+                           value="@item.MenuItemId" />
 
-                <label>Score</label>
-                <select name="caretakerScore">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
+                    <input type="hidden"
+                           name="caretakerId"
+                           value="@item.MenuItem?.CaretakerId" />
 
-                <br />
+                    <div class="rating-section">
 
-                <label>Comment</label>
-                <textarea name="caretakerComment"></textarea>
+                        <h3>Package Rating</h3>
 
-                <br /><br />
+                        <div class="form-group-clean">
+                            <label>Score</label>
 
-                <button type="submit">Submit Rating</button>
-            </form>
-        </div>
-    }
+                            <select name="menuScore">
+                                <option value="1">1 - Poor</option>
+                                <option value="2">2 - Fair</option>
+                                <option value="3">3 - Good</option>
+                                <option value="4">4 - Very Good</option>
+                                <option value="5">5 - Excellent</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group-clean">
+                            <label>Package Review</label>
+
+                            <textarea name="menuComment"
+                                      placeholder="Write your feedback about the catering package..."></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="rating-section">
+
+                        <h3>Catering Company Rating</h3>
+
+                        <div class="form-group-clean">
+                            <label>Score</label>
+
+                            <select name="caretakerScore">
+                                <option value="1">1 - Poor</option>
+                                <option value="2">2 - Fair</option>
+                                <option value="3">3 - Good</option>
+                                <option value="4">4 - Very Good</option>
+                                <option value="5">5 - Excellent</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group-clean">
+                            <label>Company Review</label>
+
+                            <textarea name="caretakerComment"
+                                      placeholder="Write your feedback about the catering company..."></textarea>
+                        </div>
+
+                    </div>
+
+                    <button type="submit">
+                        Submit Rating
+                    </button>
+
+                </form>
+
+            </div>
+        }
+
+    </div>
 }

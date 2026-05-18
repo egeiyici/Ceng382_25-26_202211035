@@ -1,0 +1,201 @@
+@model WebProject.Models.MenuItem
+
+@{
+    ViewData["Title"] = "Customize Catering Package";
+}
+
+<div class="package-detail-card">
+
+    @if (Model.ImageData != null)
+    {
+        <img class="package-detail-image"
+             src="@Url.Action("Image", "MenuItems", new { id = Model.Id })" />
+    }
+
+    <div class="package-detail-header">
+        <div>
+            <h1>@Model.Name</h1>
+            <p>@Model.Description</p>
+        </div>
+
+        <div class="package-price-badge">
+            Starting From @Model.BasePrice.ToString("0.00") ₺
+        </div>
+    </div>
+
+    <div class="card-box" style="margin-bottom:20px;">
+        <p>
+            <strong>Minimum Guests:</strong>
+            @Model.MinimumPeople
+        </p>
+
+        <p>
+            <strong>Extra Guest Price:</strong>
+            @Model.PricePerExtraPerson.ToString("0.00") ₺ per person
+        </p>
+
+        <p style="color:#64748B;">
+            Larger guest counts receive automatic discounted extra-person pricing.
+        </p>
+    </div>
+
+    <form asp-controller="Cart"
+          asp-action="AddToCart"
+          method="post"
+          class="add-cart-form">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="menuItemId"
+               value="@Model.Id" />
+
+        <div class="form-group-clean">
+            <label>Guest Count</label>
+
+            <input type="number"
+                   id="personCountInput"
+                   name="personCount"
+                   min="@Model.MinimumPeople"
+                   value="@Model.MinimumPeople"
+                   required />
+        </div>
+
+        @if (Model.MenuOptions != null && Model.MenuOptions.Any())
+        {
+            <h2>Package Features</h2>
+
+            <div class="option-list">
+                @foreach (var option in Model.MenuOptions)
+                {
+                    <label class="option-card">
+                        <input type="checkbox"
+                               name="selectedOptionIds"
+                               value="@option.Id"
+                               class="feature-checkbox"
+                               data-price="@option.ExtraPrice.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+
+                        <div class="option-content">
+                            <div class="option-left">
+                                <div class="option-icon">
+                                    🍽️
+                                </div>
+
+                                <div>
+                                    <h4>@option.OptionName</h4>
+                                    <p>Catering feature</p>
+                                </div>
+                            </div>
+
+                            <div class="option-price">
+                                +@option.ExtraPrice.ToString("0.00") ₺
+                            </div>
+                        </div>
+                    </label>
+                }
+            </div>
+        }
+
+        <div class="cart-summary-card" style="margin-top:22px;">
+            <div>
+                <h2>Live Package Price</h2>
+                <p id="livePriceNote">
+                    Price updates automatically based on guest count and selected features.
+                </p>
+            </div>
+
+            <div class="cart-summary-right">
+                <strong id="liveTotalPrice">
+                    @Model.BasePrice.ToString("0.00") ₺
+                </strong>
+            </div>
+        </div>
+
+        <div class="package-detail-actions">
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="map-pill">
+                Back To Catering Companies
+            </a>
+
+            <button type="submit"
+                    class="restaurant-cart-button">
+                Add Catering Package
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        const basePrice = Number("@Model.BasePrice.ToString(System.Globalization.CultureInfo.InvariantCulture)");
+        const minimumPeople = Number("@Model.MinimumPeople");
+        const pricePerExtraPerson = Number("@Model.PricePerExtraPerson.ToString(System.Globalization.CultureInfo.InvariantCulture)");
+
+        const personInput = document.getElementById("personCountInput");
+        const totalBox = document.getElementById("liveTotalPrice");
+        const noteBox = document.getElementById("livePriceNote");
+        const optionInputs = document.querySelectorAll(".feature-checkbox");
+
+        function calculatePackageBaseTotal(personCount) {
+            if (personCount <= minimumPeople) {
+                return basePrice;
+            }
+
+            const extraPeople = personCount - minimumPeople;
+
+            let multiplier = 1.00;
+
+            if (personCount > 50) {
+                multiplier = 0.70;
+            } else if (personCount > 20) {
+                multiplier = 0.85;
+            }
+
+            return basePrice + (extraPeople * pricePerExtraPerson * multiplier);
+        }
+
+        function updateLivePrice() {
+            let personCount = Number(personInput.value);
+
+            if (!personCount || personCount < minimumPeople) {
+                personCount = minimumPeople;
+                personInput.value = minimumPeople;
+            }
+
+            let featuresTotal = 0;
+
+            optionInputs.forEach(option => {
+                if (option.checked) {
+                    featuresTotal += Number(option.dataset.price);
+                }
+            });
+
+            const packageTotal = calculatePackageBaseTotal(personCount);
+            const finalTotal = packageTotal + featuresTotal;
+
+            totalBox.innerText = finalTotal.toLocaleString("tr-TR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + " ₺";
+
+            noteBox.innerText =
+                "Package base: " + packageTotal.toLocaleString("tr-TR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) +
+                " ₺ | Features: " + featuresTotal.toLocaleString("tr-TR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) + " ₺";
+        }
+
+        personInput.addEventListener("input", updateLivePrice);
+
+        optionInputs.forEach(option => {
+            option.addEventListener("change", updateLivePrice);
+        });
+
+        updateLivePrice();
+    </script>
+}

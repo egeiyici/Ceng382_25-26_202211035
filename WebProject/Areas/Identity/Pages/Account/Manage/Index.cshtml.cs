@@ -1,11 +1,6 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -26,39 +21,28 @@ namespace WebProject.Areas.Identity.Pages.Account.Manage
             _signInManager = signInManager;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string Username { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        public bool HasProfileImage { get; set; }
+
         [TempData]
         public string StatusMessage { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+            [Display(Name = "Full Name / Company Name")]
+            public string FullName { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            public IFormFile ProfileImage { get; set; }
+
+            public bool RemoveProfileImage { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -67,31 +51,52 @@ namespace WebProject.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
+            HasProfileImage = user.ProfileImageData != null;
 
             Input = new InputModel
             {
+                FullName = user.FullName,
                 PhoneNumber = phoneNumber
             };
+        }
+
+        public async Task<IActionResult> OnGetProfileImageAsync()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null ||
+                user.ProfileImageData == null ||
+                user.ProfileImageContentType == null)
+            {
+                return NotFound();
+            }
+
+            return File(user.ProfileImageData, user.ProfileImageContentType);
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound(
+                    $"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound(
+                    $"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -100,19 +105,46 @@ namespace WebProject.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
+            user.FullName = Input.FullName;
+
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+
             if (Input.PhoneNumber != phoneNumber)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+                var setPhoneResult =
+                    await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
+
                 if (!setPhoneResult.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    StatusMessage =
+                        "Unexpected error when trying to set phone number.";
+
                     return RedirectToPage();
                 }
             }
 
+            if (Input.RemoveProfileImage)
+            {
+                user.ProfileImageData = null;
+                user.ProfileImageContentType = null;
+            }
+            else if (Input.ProfileImage != null &&
+                     Input.ProfileImage.Length > 0)
+            {
+                using var memoryStream = new MemoryStream();
+
+                await Input.ProfileImage.CopyToAsync(memoryStream);
+
+                user.ProfileImageData = memoryStream.ToArray();
+                user.ProfileImageContentType = Input.ProfileImage.ContentType;
+            }
+
+            await _userManager.UpdateAsync(user);
+
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+
+            StatusMessage = "Your profile has been updated.";
+
             return RedirectToPage();
         }
     }

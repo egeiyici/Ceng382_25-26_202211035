@@ -1,0 +1,56 @@
+@model List<WebProject.Models.OrderMessage>
+
+@{
+    ViewData["Title"] = "Catering Order Support";
+    int orderId = ViewBag.OrderId;
+}
+
+<h1>Catering Order Support</h1>
+
+<div class="support-chat-card">
+
+    <div class="support-chat-header">
+        <div>
+            <h2>Order #@orderId</h2>
+            <p>Use this chat to discuss catering package details, delivery notes, and service requests.</p>
+        </div>
+    </div>
+
+    <div class="support-message-box">
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <h2>No messages yet</h2>
+                <p>Start the conversation about this catering order.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var message in Model)
+            {
+                <div class="support-message">
+                    <div class="support-message-top">
+                        <strong>@message.Sender?.FullName</strong>
+                        <small>@message.SentAt</small>
+                    </div>
+
+                    <p>@message.MessageText</p>
+                </div>
+            }
+        }
+    </div>
+
+    <form asp-action="SendMessage" method="post" class="support-message-form">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="orderId" value="@orderId" />
+
+        <textarea name="messageText"
+                  placeholder="Type your catering order message..."></textarea>
+
+        <button type="submit" class="chat-button">
+            Send Message
+        </button>
+    </form>
+
+</div>

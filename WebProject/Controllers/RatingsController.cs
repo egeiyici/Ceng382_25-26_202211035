@@ -32,7 +32,7 @@ namespace WebProject.Controllers
             var order = await _context.Orders
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.MenuItem)
-                .FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId && o.Status == "Completed");
+                .FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId);
 
             if (order == null)
             {
@@ -58,14 +58,15 @@ namespace WebProject.Controllers
             var order = await _context.Orders
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.MenuItem)
-                .FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId && o.Status == "Completed");
+                .FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId);
 
             if (order == null)
             {
                 return NotFound();
             }
 
-            var orderItem = order.OrderItems.FirstOrDefault(x => x.MenuItemId == menuItemId);
+            var orderItem = order.OrderItems
+                .FirstOrDefault(x => x.MenuItemId == menuItemId);
 
             if (orderItem == null || orderItem.MenuItem == null)
             {
@@ -99,10 +100,10 @@ namespace WebProject.Controllers
 
             await _logService.AddLogAsync(
                 "Rating Submitted",
-                $"User rated menu item #{menuItemId} and caretaker #{caretakerId}.",
+                $"User rated package #{menuItemId} and catering company #{caretakerId}.",
                 userId);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("MyOrders", "Orders");
         }
     }
 }

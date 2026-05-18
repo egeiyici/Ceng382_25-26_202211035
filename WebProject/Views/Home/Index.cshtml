@@ -1,68 +1,288 @@
-﻿@model List<WebProject.Models.MenuItem>
+﻿@model List<WebProject.Models.RestaurantViewModel>
 
 @{
     ViewData["Title"] = "Home";
-    var caretakerRatings = ViewBag.CaretakerRatings as Dictionary<string, double>;
+
+    var allCateringCompanies =
+        ViewBag.AllCateringCompanies as List<WebProject.Models.RestaurantViewModel>
+        ?? new List<WebProject.Models.RestaurantViewModel>();
 }
 
-<h1>Available Menus</h1>
+<section class="hero-section">
+    <div class="hero-content">
+        <span class="hero-badge">Food4Everyone Catering Platform</span>
 
-@if (ViewBag.LocationFilterMessage != null)
-{
-    <p><strong>Location Filter:</strong> @ViewBag.LocationFilterMessage</p>
-}
+        <h1>Professional catering companies for events, offices, and organizations.</h1>
 
-@if (Model == null || !Model.Any())
-{
-    <p>No menu items available yet.</p>
-}
-else
-{
-    <div>
-        @foreach (var item in Model)
-        {
-            var averageRating = item.Ratings != null && item.Ratings.Any()
-                ? item.Ratings.Average(r => r.Score)
-                : 0;
+        <p>
+            Discover nearby catering companies, compare catering packages,
+            customize service options, place bulk orders,
+            and communicate with your caterer after purchase.
+        </p>
 
-            var caretakerAverageRating = 0.0;
+        <div class="hero-actions">
+            <a class="hero-primary" href="#nearby-catering-companies">
+                Explore Nearby Companies
+            </a>
 
-            if (caretakerRatings != null && item.CaretakerId != null && caretakerRatings.ContainsKey(item.CaretakerId))
+            <a class="hero-secondary" href="#all-catering-companies">
+                View All Ankara Companies
+            </a>
+
+            @if (!User.Identity?.IsAuthenticated ?? true)
             {
-                caretakerAverageRating = caretakerRatings[item.CaretakerId];
+                <a class="hero-secondary"
+                   asp-area="Identity"
+                   asp-page="/Account/Register">
+                    Register as a Caterer
+                </a>
             }
-
-            <div style="border:1px solid #ccc; padding:15px; margin-bottom:15px; border-radius:8px; background-color:white;">
-                <h3>@item.Name</h3>
-                <p><strong>Price:</strong> @item.Price ₺</p>
-                <p><strong>Menu Rating:</strong> ⭐ @averageRating.ToString("0.0")</p>
-                <p><strong>Caretaker:</strong> @item.Caretaker?.Email</p>
-                <p><strong>Caretaker Rating:</strong> ⭐ @caretakerAverageRating.ToString("0.0")</p>
-                <p><strong>Description:</strong> @item.Description</p>
-
-                <form asp-controller="Cart" asp-action="AddToCart" method="post">
-                    <input type="hidden" name="menuItemId" value="@item.Id" />
-
-                    @if (item.MenuOptions != null && item.MenuOptions.Any())
-                    {
-                        <p><strong>Customization Options:</strong></p>
-
-                        @foreach (var option in item.MenuOptions)
-                        {
-                            <div>
-                                <input type="checkbox" name="selectedOptionIds" value="@option.Id" />
-                                <label>@option.OptionName (+@option.ExtraPrice ₺)</label>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <p><em>No customization options.</em></p>
-                    }
-
-                    <button type="submit">Add to Cart</button>
-                </form>
-            </div>
-        }
+        </div>
     </div>
-}
+
+    <div class="hero-panel">
+        <div class="hero-food-card">
+            <div class="hero-icon">🥗</div>
+
+            <h3>Smart Catering Orders</h3>
+
+            <p>
+                Location-based company filtering, customizable catering packages,
+                simulated payments, dynamic agreements, and order-based support.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="stats-strip">
+    <div>
+        <strong>1200+</strong>
+        <span>Demo Catering Orders</span>
+    </div>
+
+    <div>
+        <strong>45+</strong>
+        <span>Partner Catering Firms</span>
+    </div>
+
+    <div>
+        <strong>4.8</strong>
+        <span>Average Company Rating</span>
+    </div>
+
+    <div>
+        <strong>24/7</strong>
+        <span>Order Support Chat</span>
+    </div>
+</section>
+
+<section class="why-section">
+    <h2>Why Food4Everyone?</h2>
+
+    <div class="why-grid">
+        <div class="why-card">
+            <span>📍</span>
+
+            <h3>Nearby Catering Companies</h3>
+
+            <p>
+                Users can discover catering companies close to their selected delivery address
+                through Google Maps-based filtering.
+            </p>
+        </div>
+
+        <div class="why-card">
+            <span>📦</span>
+
+            <h3>Customizable Packages</h3>
+
+            <p>
+                Caterers can offer dynamic catering packages with optional additions,
+                removable items, service extras, and price-changing options.
+            </p>
+        </div>
+
+        <div class="why-card">
+            <span>🧾</span>
+
+            <h3>Dynamic Documents</h3>
+
+            <p>
+                Every completed order can generate a receipt and agreement PDF
+                using real customer, caterer, package, and payment data.
+            </p>
+        </div>
+
+        <div class="why-card">
+            <span>💬</span>
+
+            <h3>Order-Based Support</h3>
+
+            <p>
+                Customers and catering companies can communicate after purchase
+                through an order-linked support chat system.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section id="nearby-catering-companies" class="restaurant-section">
+
+    <div class="section-heading">
+        <div>
+            <h1>Nearby Catering Companies</h1>
+
+            @if (ViewBag.LocationFilterMessage != null)
+            {
+                <p>@ViewBag.LocationFilterMessage</p>
+            }
+        </div>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="empty-state">
+            <h2>No nearby catering companies found</h2>
+
+            <p>
+                The 10 km filter did not find a nearby company.
+                You can still choose any Ankara catering company below.
+            </p>
+        </div>
+    }
+    else
+    {
+        <div class="restaurant-grid">
+            @foreach (var restaurant in Model)
+            {
+                <div class="restaurant-card">
+                    <div class="restaurant-cover">
+                        <div class="restaurant-initial">
+                            @restaurant.RestaurantName.Substring(0, 1)
+                        </div>
+                    </div>
+
+                    <div class="restaurant-body">
+                        <h2>@restaurant.RestaurantName</h2>
+
+                        <p class="restaurant-address">
+                            <strong>Service Address:</strong>
+                            @restaurant.Address
+                        </p>
+
+                        <div class="restaurant-stats">
+                            <span>
+                                ⭐ @restaurant.AverageRating.ToString("0.0")
+                            </span>
+
+                            <span>
+                                @restaurant.MenuItemCount catering packages
+                            </span>
+
+                            @if (restaurant.DistanceKm != null)
+                            {
+                                <span>
+                                    @restaurant.DistanceKm.Value.ToString("0.0") km away
+                                </span>
+                            }
+                        </div>
+
+                        <div class="restaurant-actions">
+                            @if (!string.IsNullOrWhiteSpace(restaurant.Address))
+                            {
+                                <a class="map-pill"
+                                   href="https://www.google.com/maps/search/?api=1&query=@Uri.EscapeDataString(restaurant.Address)"
+                                   target="_blank">
+                                    View on Maps
+                                </a>
+                            }
+
+                            <a class="view-menu-pill"
+                               asp-controller="MenuItems"
+                               asp-action="Index"
+                               asp-route-caretakerId="@restaurant.CaretakerId">
+                                View Packages
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>
+
+<section id="all-catering-companies" class="restaurant-section">
+
+    <div class="section-heading">
+        <div>
+            <h1>All Catering Companies in Ankara</h1>
+
+            <p>
+                These companies are available for demo purposes and are not limited by the 10 km nearby filter.
+            </p>
+        </div>
+    </div>
+
+    @if (!allCateringCompanies.Any())
+    {
+        <div class="empty-state">
+            <h2>No catering companies found</h2>
+
+            <p>
+                Create catering company accounts and packages to display them here.
+            </p>
+        </div>
+    }
+    else
+    {
+        <div class="restaurant-grid">
+            @foreach (var restaurant in allCateringCompanies)
+            {
+                <div class="restaurant-card">
+                    <div class="restaurant-cover">
+                        <div class="restaurant-initial">
+                            @restaurant.RestaurantName.Substring(0, 1)
+                        </div>
+                    </div>
+
+                    <div class="restaurant-body">
+                        <h2>@restaurant.RestaurantName</h2>
+
+                        <p class="restaurant-address">
+                            <strong>Service Address:</strong>
+                            @restaurant.Address
+                        </p>
+
+                        <div class="restaurant-stats">
+                            <span>
+                                ⭐ @restaurant.AverageRating.ToString("0.0")
+                            </span>
+
+                            <span>
+                                @restaurant.MenuItemCount catering packages
+                            </span>
+                        </div>
+
+                        <div class="restaurant-actions">
+                            @if (!string.IsNullOrWhiteSpace(restaurant.Address))
+                            {
+                                <a class="map-pill"
+                                   href="https://www.google.com/maps/search/?api=1&query=@Uri.EscapeDataString(restaurant.Address)"
+                                   target="_blank">
+                                    View on Maps
+                                </a>
+                            }
+
+                            <a class="view-menu-pill"
+                               asp-controller="MenuItems"
+                               asp-action="Index"
+                               asp-route-caretakerId="@restaurant.CaretakerId">
+                                View Packages
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

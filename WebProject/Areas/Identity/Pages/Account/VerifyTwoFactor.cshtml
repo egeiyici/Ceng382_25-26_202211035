@@ -1,0 +1,41 @@
+@page
+@model WebProject.Areas.Identity.Pages.Account.VerifyTwoFactorModel
+
+@{
+    ViewData["Title"] = "Two-Factor Authentication";
+}
+
+<div class="card-box" style="max-width:500px; margin:auto; margin-top:50px;">
+
+    <h1>Two-Factor Authentication</h1>
+
+    <p>
+        A verification code was sent to your email.
+    </p>
+
+    <form method="post">
+
+        <div>
+
+            <label asp-for="Input.Code"></label>
+
+            <input asp-for="Input.Code"
+                   placeholder="Enter verification code" />
+
+            <span asp-validation-for="Input.Code"
+                  class="text-danger"></span>
+
+        </div>
+
+        <button type="submit"
+                class="action-link chat-button">
+            Verify Login
+        </button>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -19,6 +19,7 @@ namespace WebProject.Data
         public DbSet<MenuItemRating> MenuItemRatings { get; set; }
         public DbSet<CaretakerRating> CaretakerRatings { get; set; }
         public DbSet<LogEntry> LogEntries { get; set; }
+        public DbSet<OrderMessage> OrderMessages { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

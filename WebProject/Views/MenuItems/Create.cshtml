@@ -1,47 +1,61 @@
 @model WebProject.Models.MenuItem
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Catering Package";
 }
 
-<h1>Create</h1>
+<h1>Create Catering Package</h1>
 
-<h4>MenuItem</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CaretakerId" class="control-label"></label>
-                <select asp-for="CaretakerId" class ="form-control" asp-items="ViewBag.CaretakerId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+<div class="card-box">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
 
-<div>
-    <a asp-action="Index">Back to List</a>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group-clean">
+            <label asp-for="Name">Package Name</label>
+            <input asp-for="Name" placeholder="Corporate Lunch Package" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group-clean">
+            <label asp-for="Price">Base Package Price</label>
+            <input asp-for="Price" type="number" step="0.01" placeholder="1000" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+            <small>This is the base price for the minimum number of people.</small>
+        </div>
+
+        <div class="form-group-clean">
+            <label asp-for="MinimumPeople">Minimum People</label>
+            <input asp-for="MinimumPeople" type="number" min="1" placeholder="10" />
+            <span asp-validation-for="MinimumPeople" class="text-danger"></span>
+        </div>
+
+        <div class="form-group-clean">
+            <label asp-for="PricePerPerson">Extra Person Price</label>
+            <input asp-for="PricePerPerson" type="number" step="0.01" placeholder="100" />
+            <span asp-validation-for="PricePerPerson" class="text-danger"></span>
+            <small>This price is discounted automatically for larger groups.</small>
+        </div>
+
+        <div class="form-group-clean">
+            <label asp-for="Description">Package Description</label>
+            <textarea asp-for="Description"
+                      placeholder="Describe included meals, service details, minimum group size, and event type."></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group-clean">
+            <label>Package Image</label>
+            <input type="file" name="imageFile" accept="image/*" />
+        </div>
+
+        <button type="submit">Create Package</button>
+
+        <a class="action-link" asp-action="Index">Back to Packages</a>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }

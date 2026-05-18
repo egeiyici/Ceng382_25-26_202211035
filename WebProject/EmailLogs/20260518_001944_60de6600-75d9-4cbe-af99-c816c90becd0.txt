@@ -1,0 +1,32 @@
+TO: degeiyi@gmail.com
+SUBJECT: New Catering Package Order
+--------------------------------
+FOOD4EVERYONE CATERING ORDER
+
+ORDER INFORMATION
+----------------------------------
+Order Number: #1
+Order Date: 18.05.2026 00:19
+Current Status: Pending Approval
+
+CUSTOMER INFORMATION
+----------------------------------
+Customer Email: c2211035@student.cankaya.edu.tr
+Delivery Address: kızılay
+
+ORDERED CATERING PACKAGES
+----------------------------------
+Package: Corporate Lunch Meeting Package
+Guest Count: 105
+Selected Features: Rice Side Dish
+Package Total: 16585,00 ₺
+
+Package: Diplomatic Reception Catering
+Guest Count: 400
+Selected Features: Premium Table Setup
+Package Total: 97460,00 ₺
+
+----------------------------------
+TOTAL ORDER AMOUNT: 114045,00 ₺
+
+Thank you for choosing Food4Everyone Catering Platform.

@@ -6,26 +6,61 @@
     <title>@ViewData["Title"] - Food4Everyone</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
+
 <body>
     <div class="page-shell">
-        <partial name="_LoginPartial" />
         <aside class="sidebar" id="sidebar">
             <div class="brand-box">
-                <h2>Food4All</h2>
-                <p>Foods Are Everywhere,Food4Everyone</p>
+                <div class="brand-logo">F4E</div>
+
+                
+
+                <p>
+                    Smart catering platform<br />
+                    for companies and events
+                </p>
             </div>
 
             <nav class="sidebar-nav">
-                <a asp-controller="AdminLogs" asp-action="Index">Admin Logs</a>
-                <a asp-controller="Cart" asp-action="Index">Cart</a>
                 <a asp-controller="Home" asp-action="Index">Home</a>
-                <a asp-controller="Home" asp-action="Privacy">About</a>
-                <a asp-controller="MenuItems" asp-action="Index">All Menus</a>
-                <a asp-controller="MenuItems" asp-action="Create">Create Menu</a>
-                <a href="#">Menu</a>
-                <a href="#">Restaurants</a>
-                <a href="#">Orders</a>
-                <a href="#">Contact</a>
+                <a asp-controller="Home" asp-action="About">About</a>
+                <a asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                <a asp-controller="MenuItems" asp-action="Index">All Catering Packages</a>
+
+                @if (User.IsInRole("User"))
+                {
+                    <a asp-controller="Cart" asp-action="Index">Selected Packages</a>
+                    <a asp-controller="Orders" asp-action="MyOrders">My Catering Orders</a>
+                    <a asp-controller="Addresses" asp-action="Index">Delivery Addresses</a>
+                    <a asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a>
+                }
+
+                @if (User.IsInRole("Caretaker"))
+{
+    <a asp-controller="MenuItems" asp-action="Create">
+        Create Catering Package
+    </a>
+
+    <a asp-controller="MenuItems" asp-action="Index">
+        My Packages
+    </a>
+
+    <a asp-controller="Orders" asp-action="CaretakerOrders">
+        Received Orders
+    </a>
+
+    <a asp-area="Identity"
+       asp-page="/Account/Manage/Index">
+        Company Profile
+    </a>
+}
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="AdminLogs" asp-action="Index">System Logs</a>
+                    <a asp-controller="AdminUsers" asp-action="Index">Users & Catering Companies</a>
+                    <a asp-controller="Orders" asp-action="AdminOrders">All Catering Orders</a>
+                }
             </nav>
         </aside>
 
@@ -33,10 +68,11 @@
             <header class="topbar">
                 <div class="topbar-left">
                     <button id="menuToggle" type="button">☰</button>
-                    <span class="logo-text">F4E</span>
+                    <span class="logo-text">Food4Everyone</span>
                 </div>
+
                 <div class="topbar-right">
-                    <span>Welcome</span>
+                    <partial name="_LoginPartial" />
                 </div>
             </header>
 
@@ -44,8 +80,21 @@
                 @RenderBody()
             </main>
 
-            <footer class="footer">
-                <p>&copy; 2026 - Food4Everyone</p>
+            <footer class="footer premium-footer">
+                <div>
+                    <strong>Food4Everyone</strong>
+                    <p>
+                        Catering package marketplace for nearby companies,
+                        event orders, secure payments, and order support.
+                    </p>
+                </div>
+
+                <div class="footer-links">
+                    <a asp-controller="Home" asp-action="About">About</a>
+                    <a asp-controller="Home" asp-action="Index">Catering Companies</a>
+                    <a asp-controller="MenuItems" asp-action="Index">Packages</a>
+                    <span>© 2026</span>
+                </div>
             </footer>
         </div>
     </div>
@@ -54,10 +103,13 @@
         const toggleBtn = document.getElementById("menuToggle");
         const sidebar = document.getElementById("sidebar");
 
-        toggleBtn.addEventListener("click", () => {
-            sidebar.classList.toggle("collapsed");
-        });
+        if (toggleBtn && sidebar) {
+            toggleBtn.addEventListener("click", () => {
+                sidebar.classList.toggle("collapsed");
+            });
+        }
     </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

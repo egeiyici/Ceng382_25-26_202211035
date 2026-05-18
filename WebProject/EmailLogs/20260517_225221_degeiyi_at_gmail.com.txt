@@ -1,0 +1,7 @@
+TO: degeiyi@gmail.com
+
+SUBJECT:
+Confirm your email
+
+MESSAGE:
+Please confirm your account by <a href='http://localhost:5030/Identity/Account/ConfirmEmailChange?userId=220d6b67-4d9a-4d9d-bcb7-4c8713b206e1&amp;email=degeiyi@gmail.com&amp;code=Q2ZESjhQd212cWd4eTM5SG1jQWY2cUUwTW1oTE8vRHFLS3psbHBUUlFCWk04Q00zNUJ2N01TOVJQWVVVS3EyYlNYOVN1MXlWTjFZekdicmpmdmwySHVpTTh0UWVtVk8rOStweWlVUEZxV2xPM25WUHd5VDVsd0lEY3EzYThaZWFKOGtVVVh0M0Z0elBGdUtmLy9ZOGsvSlkvQXBjTjVPd3poemhsOVZQdk16L3RhenM3TjhtOENCYVBwRUEySXdXZDh2M3JicTFMdWszdmZ0M2xhWDJWb3UvNTVTTVZLb2ZrYlRMb1pvRWdNNk56dUFWWVBwTTYyU0hDNDRyRTB3UllnbG9qZz09'>clicking here</a>.

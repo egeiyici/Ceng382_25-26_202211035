@@ -14,8 +14,18 @@ namespace WebProject.Models
 
         public int Quantity { get; set; }
 
+        public int PersonCount { get; set; }
+
+        public int MinimumPeople { get; set; }
+
         [Precision(18, 2)]
         public decimal UnitPrice { get; set; }
+
+        [Precision(18, 2)]
+        public decimal PricePerPerson { get; set; }
+
+        [Precision(18, 2)]
+        public decimal PackageBaseTotal { get; set; }
 
         [Precision(18, 2)]
         public decimal CustomizationTotal { get; set; }

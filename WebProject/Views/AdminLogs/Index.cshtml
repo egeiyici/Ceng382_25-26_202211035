@@ -2,13 +2,35 @@
 
 @{
     ViewData["Title"] = "System Logs";
+
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+    string searchTerm = ViewBag.SearchTerm as string ?? "";
 }
 
 <h1>System Logs</h1>
 
+<div class="card-box">
+    <form method="get">
+        <input type="text"
+               name="searchTerm"
+               value="@searchTerm"
+               placeholder="Search system logs..." />
+
+        <button type="submit">Filter</button>
+
+        <a class="action-link" asp-action="Index">
+            Clear
+        </a>
+    </form>
+</div>
+
 @if (!Model.Any())
 {
-    <p>No logs recorded yet.</p>
+    <div class="empty-state">
+        <h2>No logs found</h2>
+        <p>System activity, catering orders, login events, and document actions will appear here.</p>
+    </div>
 }
 else
 {
@@ -21,6 +43,7 @@ else
                 <th style="padding:10px; border:1px solid #ddd;">User ID</th>
             </tr>
         </thead>
+
         <tbody>
             @foreach (var log in Model)
             {
@@ -33,4 +56,28 @@ else
             }
         </tbody>
     </table>
+
+    <div class="card-box" style="margin-top:20px;">
+        @if (currentPage > 1)
+        {
+            <a class="action-link"
+               asp-action="Index"
+               asp-route-page="@(currentPage - 1)"
+               asp-route-searchTerm="@searchTerm">
+                Previous
+            </a>
+        }
+
+        <span style="margin:0 10px;">Page @currentPage of @totalPages</span>
+
+        @if (currentPage < totalPages)
+        {
+            <a class="action-link"
+               asp-action="Index"
+               asp-route-page="@(currentPage + 1)"
+               asp-route-searchTerm="@searchTerm">
+                Next
+            </a>
+        }
+    </div>
 }

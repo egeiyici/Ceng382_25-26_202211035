@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebProject.Data;
 using WebProject.Models;
+using WebProject.Services;
 
 namespace WebProject.Controllers
 {
@@ -10,10 +11,14 @@ namespace WebProject.Controllers
     public class MenuOptionsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly LogService _logService;
 
-        public MenuOptionsController(ApplicationDbContext context)
+        public MenuOptionsController(
+            ApplicationDbContext context,
+            LogService logService)
         {
             _context = context;
+            _logService = logService;
         }
 
         public async Task<IActionResult> Create(int menuItemId)
@@ -39,6 +44,12 @@ namespace WebProject.Controllers
             {
                 _context.MenuOptions.Add(menuOption);
                 await _context.SaveChangesAsync();
+
+                await _logService.AddLogAsync(
+                    "Package Option Created",
+                    $"Package option '{menuOption.OptionName}' was added to catering package #{menuOption.MenuItemId}.",
+                    null);
+
                 return RedirectToAction("Index", "MenuItems");
             }
 

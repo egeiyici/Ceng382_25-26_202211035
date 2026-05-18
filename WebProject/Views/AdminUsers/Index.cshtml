@@ -1,0 +1,79 @@
+@model List<WebProject.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Users and Catering Companies";
+
+    var userRoles = ViewBag.UserRoles as Dictionary<string, IList<string>>;
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+    string searchTerm = ViewBag.SearchTerm as string ?? "";
+}
+
+<h1>Users and Catering Companies</h1>
+
+<div class="card-box">
+    <form method="get">
+        <input type="text"
+               name="searchTerm"
+               value="@searchTerm"
+               placeholder="Search customers or catering companies..." />
+
+        <button type="submit">Filter</button>
+        <a class="action-link" asp-action="Index">Clear</a>
+    </form>
+</div>
+
+<table style="width:100%; background:white; border-collapse:collapse;">
+    <thead>
+        <tr>
+            <th style="padding:10px; border:1px solid #ddd;">Full Name / Company Name</th>
+            <th style="padding:10px; border:1px solid #ddd;">Email</th>
+            <th style="padding:10px; border:1px solid #ddd;">Role</th>
+            <th style="padding:10px; border:1px solid #ddd;">Address</th>
+            <th style="padding:10px; border:1px solid #ddd;">Latitude</th>
+            <th style="padding:10px; border:1px solid #ddd;">Longitude</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var user in Model)
+        {
+            var roles = userRoles != null && userRoles.ContainsKey(user.Id)
+                ? string.Join(", ", userRoles[user.Id])
+                : "No role";
+
+            <tr>
+                <td style="padding:10px; border:1px solid #ddd;">@user.FullName</td>
+                <td style="padding:10px; border:1px solid #ddd;">@user.Email</td>
+                <td style="padding:10px; border:1px solid #ddd;">@roles</td>
+                <td style="padding:10px; border:1px solid #ddd;">@user.Address</td>
+                <td style="padding:10px; border:1px solid #ddd;">@user.Latitude</td>
+                <td style="padding:10px; border:1px solid #ddd;">@user.Longitude</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="card-box" style="margin-top:20px;">
+    @if (currentPage > 1)
+    {
+        <a class="action-link"
+           asp-action="Index"
+           asp-route-page="@(currentPage - 1)"
+           asp-route-searchTerm="@searchTerm">
+            Previous
+        </a>
+    }
+
+    <span style="margin:0 10px;">Page @currentPage of @totalPages</span>
+
+    @if (currentPage < totalPages)
+    {
+        <a class="action-link"
+           asp-action="Index"
+           asp-route-page="@(currentPage + 1)"
+           asp-route-searchTerm="@searchTerm">
+            Next
+        </a>
+    }
+</div>
